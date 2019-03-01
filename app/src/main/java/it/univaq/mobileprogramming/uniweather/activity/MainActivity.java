@@ -1,7 +1,9 @@
-package it.univaq.mobileprogramming.uniweather;
+package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import it.univaq.mobileprogramming.uniweather.R;
 
 public class MainActivity extends AppCompatActivity {
 

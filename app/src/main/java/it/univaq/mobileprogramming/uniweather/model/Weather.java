@@ -13,7 +13,7 @@ public class Weather {
         this.id = id;
         this.main = main;
         this.description = description;
-        this.icon = icon;
+        this.icon = "i"+icon;
     }
 
     public int getId() {

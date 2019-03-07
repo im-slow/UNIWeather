@@ -1,9 +1,17 @@
 package it.univaq.mobileprogramming.uniweather.model;
 
 public class Clouds {
-    public int all;
+
+    private int all;
+
+    public Clouds() {}
+
+    public Clouds(int all) {
+        this.all = all;
+    }
 
     public int getAll() {
+
         return all;
     }
 

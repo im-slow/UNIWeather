@@ -1,11 +1,22 @@
 package it.univaq.mobileprogramming.uniweather.model;
 
 public class Main {
-    public double temp;
-    public int pressure;
-    public int humidity;
-    public double temp_min;
-    public double temp_max;
+
+    private double temp;
+    private int pressure;
+    private int humidity;
+    private double temp_min;
+    private double temp_max;
+
+    public Main() {}
+
+    public Main(double temp, int pressure, int humidity, double temp_min, double temp_max) {
+        this.temp = temp;
+        this.pressure = pressure;
+        this.humidity = humidity;
+        this.temp_min = temp_min;
+        this.temp_max = temp_max;
+    }
 
     public int getPressure() {
         return pressure;
@@ -40,6 +51,7 @@ public class Main {
     }
 
     public double getTemp() {
+
         return temp;
     }
 

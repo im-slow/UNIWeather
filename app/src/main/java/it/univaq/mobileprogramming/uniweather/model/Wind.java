@@ -6,7 +6,7 @@ public class Wind  {
     private int deg;
     private double gust;
 
-    public Wind(){};
+    public Wind(){}
 
     public Wind(double speed, int deg, double gust) {
         this.speed = speed;

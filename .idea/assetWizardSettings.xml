@@ -28,8 +28,8 @@
                         </option>
                         <option name="values">
                           <map>
-                            <entry key="color" value="ffffff" />
-                            <entry key="outputName" value="ic_add_white_24dp" />
+                            <entry key="color" value="6f6f6f" />
+                            <entry key="outputName" value="ic_add_grey_24dp" />
                             <entry key="sourceFile" value="C:\Users\andy4\Downloads\waves.svg" />
                           </map>
                         </option>

@@ -1,11 +1,13 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
+import android.view.View;
+import android.widget.Button;
 
 import it.univaq.mobileprogramming.uniweather.R;
 
@@ -16,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        add_city();
 
         setTitle(null);
 
@@ -43,6 +46,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void add_city() {
+        Button add_city_button = findViewById(R.id.add_city);
+
+        add_city_button.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                Intent newActivity = new Intent(v.getContext(), AddCityActivity.class);
+                startActivity(newActivity);
+            }
+        });
     }
 
 }

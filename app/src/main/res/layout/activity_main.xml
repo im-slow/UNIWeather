@@ -22,7 +22,8 @@
             android:layout_centerVertical="true"
             android:layout_marginStart="9dp"
             android:background="@drawable/ic_add_grey_24dp"
-            android:gravity="left" />
+            android:gravity="left"
+            android:onClick="add_city" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

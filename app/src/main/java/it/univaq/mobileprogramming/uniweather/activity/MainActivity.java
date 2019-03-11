@@ -14,6 +14,7 @@ import it.univaq.mobileprogramming.uniweather.R;
 
 public class MainActivity extends AppCompatActivity {
 
+    //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(mainToolbar);
     }
 
+    //crea il menù all'avvio dell'app
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -33,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
         return true;
     }
 
+    //gestisce il menù
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -48,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    //metodo onClick per il bottone '+'
     private void add_city() {
         Button add_city_button = findViewById(R.id.add_city);
 

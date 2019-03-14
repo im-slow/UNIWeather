@@ -11,6 +11,11 @@ public class Sys {
 
     public Sys() {}
 
+    //costruttore di prova per recyclerview
+    public Sys(String country){
+        this.country = country;
+    }
+
     public Sys(int type, int id, double message, String country, int sunrise, int sunset) {
         this.type = type;
         this.id = id;

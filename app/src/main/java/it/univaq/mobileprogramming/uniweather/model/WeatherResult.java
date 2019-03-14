@@ -20,6 +20,12 @@ public class WeatherResult {
 
     public WeatherResult(){}
 
+    //costruttore per provare recycler view
+    public WeatherResult(String name, Sys sys){
+        this.name = name;
+        this.sys = sys;
+    }
+
     public WeatherResult(Coord coord, List<Weather> weather, String base, Main main, int visibility, Wind wind, Rain rain, Clouds clouds, int dt, Sys sys, int id, String name, int cod) {
         this.coord = coord;
         this.weather = weather;

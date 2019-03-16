@@ -1,6 +1,7 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -11,32 +12,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.android.volley.Cache;
-import com.android.volley.Network;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.BasicNetwork;
-import com.android.volley.toolbox.DiskBasedCache;
-import com.android.volley.toolbox.HurlStack;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.json.JSONArray;
 import org.json.JSONObject;
-
 import it.univaq.mobileprogramming.uniweather.R;
+import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 
-import static android.Manifest.permission.INTERNET;
+public class MainActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
 
-
-public class MainActivity extends AppCompatActivity {
-
-    ImageView icon_view;
-    TextView name_city, desc, temperature;
+    private ImageView icon_view;
+    private TextView name_city, desc, temperature;
+    private LocationGoogleService locationService;
+    private double lat;
+    private double lon;
 
     //inizializza l'app
     @Override
@@ -48,12 +41,34 @@ public class MainActivity extends AppCompatActivity {
         temperature = findViewById(R.id.temperature);
         desc = findViewById(R.id.condition);
         add_city();
-        get_weather_by_name("Castel di Ieri");
 
         setTitle(null);
 
-        Toolbar mainToolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        locationService.stopLocationUpdates(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        locationService = new LocationGoogleService();
+        locationService.onCreate(this, this);
+        locationService.requestLocationUpdates(this);
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        System.out.println("Lat: "+location.getLatitude());
+        System.out.println("Lon: "+location.getLongitude());
+        lat = location.getLatitude();
+        lon = location.getLongitude();
+        get_weather_by_coord(lat,lon);
     }
 
     //crea il menù all'avvio dell'app
@@ -93,10 +108,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
-    public void get_weather_by_name(String input){
+    public void get_weather_by_coord(double latitude, double longitude){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String url = "http://api.openweathermap.org/data/2.5/weather?q="+input+"&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override
@@ -171,8 +186,7 @@ public class MainActivity extends AppCompatActivity {
             icon_view.setImageResource(R.drawable.i50d);
         else if(icon_name == "i50n")
             icon_view.setImageResource(R.drawable.i50n);
-
-
     }
+
 
 }

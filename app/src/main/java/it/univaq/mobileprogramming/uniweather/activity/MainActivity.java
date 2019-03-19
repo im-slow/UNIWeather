@@ -1,8 +1,13 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -41,11 +46,26 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         temperature = findViewById(R.id.temperature);
         desc = findViewById(R.id.condition);
         add_city();
-
+        startLocalization();
         setTitle(null);
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == 1){
+            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                locationService = new LocationGoogleService();
+                locationService.onCreate(this, this);
+                locationService.requestLocationUpdates(this);
+            } else {
+                finish();
+            }
+        }
     }
 
     @Override
@@ -57,9 +77,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     @Override
     protected void onResume() {
         super.onResume();
-        locationService = new LocationGoogleService();
-        locationService.onCreate(this, this);
-        locationService.requestLocationUpdates(this);
     }
 
     @Override
@@ -69,6 +86,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         lat = location.getLatitude();
         lon = location.getLongitude();
         get_weather_by_coord(lat,lon);
+        locationService.stopLocationUpdates(this);
+
     }
 
     //crea il menù all'avvio dell'app
@@ -108,10 +127,24 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         });
     }
 
+    private void startLocalization(){
+        int check = ContextCompat
+                .checkSelfPermission(getApplicationContext(),
+                        Manifest.permission.ACCESS_FINE_LOCATION);
+        if(check == PackageManager.PERMISSION_GRANTED){
+            locationService = new LocationGoogleService();
+            locationService.onCreate(this, this);
+            locationService.requestLocationUpdates(this);
+        } else {
+            ActivityCompat.requestPermissions(MainActivity.this,
+                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 1);
+        }
+    }
+
     public void get_weather_by_coord(double latitude, double longitude){
         RequestQueue requestQueue = Volley.newRequestQueue(this);
 
-        String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=metric&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override
@@ -122,7 +155,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                             JSONObject main_object = jsonObject.getJSONObject("main");
                             JSONArray array = jsonObject.getJSONArray("weather");
                             JSONObject object = array.getJSONObject(0);
-                            int tempo = (int)main_object.getDouble("temp")-273;
+                            int tempo = (int)main_object.getDouble("temp");
                             String description = object.getString("description");
                             String city = jsonObject.getString("name");
                             String icon = "i"+object.getString("icon");
@@ -152,39 +185,41 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void setIcon_view(String icon_name){
-        if(icon_name == "i01d")
+        if(icon_name.equals("i01d"))
             icon_view.setImageResource(R.drawable.i01d);
-        else if(icon_name == "i01n")
+        else if(icon_name.equals("i01n"))
             icon_view.setImageResource(R.drawable.i01n);
-        else if(icon_name == "i02d")
+        else if(icon_name.equals("i02d"))
             icon_view.setImageResource(R.drawable.i02d);
-        else if(icon_name == "i02n")
+        else if(icon_name.equals("i02n"))
             icon_view.setImageResource(R.drawable.i02n);
-        else if(icon_name == "i03d")
+        else if(icon_name.equals("i03d"))
             icon_view.setImageResource(R.drawable.i03d);
-        else if(icon_name == "i03n")
+        else if(icon_name.equals("i03n"))
             icon_view.setImageResource(R.drawable.i03n);
-        else if(icon_name == "i04n")
+        else if(icon_name.equals("i04n"))
             icon_view.setImageResource(R.drawable.i04n);
-        else if(icon_name == "i09d")
+        else if(icon_name.equals("i04d"))
+            icon_view.setImageResource(R.drawable.i04d);
+        else if(icon_name.equals("i09d"))
             icon_view.setImageResource(R.drawable.i09d);
-        else if(icon_name == "i09n")
+        else if(icon_name.equals("i09n"))
             icon_view.setImageResource(R.drawable.i09n);
-        else if(icon_name == "i10d")
+        else if(icon_name.equals("i10d"))
             icon_view.setImageResource(R.drawable.i10d);
-        else if(icon_name == "i10n")
+        else if(icon_name.equals("i10n"))
             icon_view.setImageResource(R.drawable.i10n);
-        else if(icon_name == "i11d")
+        else if(icon_name.equals("i11d"))
             icon_view.setImageResource(R.drawable.i11d);
-        else if(icon_name == "i11n")
+        else if(icon_name.equals("i11n"))
             icon_view.setImageResource(R.drawable.i11n);
-        else if(icon_name == "i13d")
+        else if(icon_name.equals("i13d"))
             icon_view.setImageResource(R.drawable.i13d);
-        else if(icon_name == "i13n")
+        else if(icon_name.equals("i13n"))
             icon_view.setImageResource(R.drawable.i13n);
-        else if(icon_name == "i50d")
+        else if(icon_name.equals("i50d"))
             icon_view.setImageResource(R.drawable.i50d);
-        else if(icon_name == "i50n")
+        else if(icon_name.equals("i50n"))
             icon_view.setImageResource(R.drawable.i50n);
     }
 

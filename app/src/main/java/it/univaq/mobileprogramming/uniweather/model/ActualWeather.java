@@ -1,24 +1,39 @@
 package it.univaq.mobileprogramming.uniweather.model;
 
 public class ActualWeather {
-    private int city_id;
-    private String city_name;
-    private double temp;
-    private double humidity;
-    private double min_temp;
-    private double max_temp;
-    private double wind_speed;
-    private int wind_degree;
-    private double latitude;
-    private double longitude;
-    private String icon_name;
+    private int city_id,wind_degree,humidity,pressure;
+    private String city_name,description,icon_name, country;
+    private double temp,min_temp,max_temp,wind_speed,latitude,longitude;
 
-    public ActualWeather(int city_id, String city_name, double temp, double humidity,
-                         double min_temp, double max_temp, double wind_speed, int wind_degree,
-                         double latitude, double longitude, String icon_name) {
+
+    @Override
+    public String toString() {
+        return "ActualWeather{" +
+                "city_id=" + city_id +
+                ", wind_degree=" + wind_degree +
+                ", humidity=" + humidity +
+                ", pressure=" + pressure +
+                ", city_name='" + city_name + '\'' +
+                ", description='" + description + '\'' +
+                ", icon_name='" + icon_name + '\'' +
+                ", country='" + country + '\'' +
+                ", temp=" + temp +
+                ", min_temp=" + min_temp +
+                ", max_temp=" + max_temp +
+                ", wind_speed=" + wind_speed +
+                ", latitude=" + latitude +
+                ", longitude=" + longitude +
+                '}';
+    }
+
+    public ActualWeather(double latitude, double longitude, String description, String icon_name,
+                         double temp, int pressure, int humidity, double min_temp, double max_temp,
+                         double wind_speed, int wind_degree, String country, int city_id, String city_name) {
         this.city_id = city_id;
         this.city_name = city_name;
+        this.description = description;
         this.temp = temp;
+        this.pressure = pressure;
         this.humidity = humidity;
         this.min_temp = min_temp;
         this.max_temp = max_temp;
@@ -27,6 +42,7 @@ public class ActualWeather {
         this.latitude = latitude;
         this.longitude = longitude;
         this.icon_name = icon_name;
+        this.country = country;
     }
 
     public int getCity_id() {
@@ -45,6 +61,22 @@ public class ActualWeather {
         this.city_name = city_name;
     }
 
+    public String getCountry() {
+        return country;
+    }
+
+    public void setCountry(String country) {
+        this.country = country;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
     public double getTemp() {
         return temp;
     }
@@ -53,12 +85,20 @@ public class ActualWeather {
         this.temp = temp;
     }
 
-    public double getHumidity() {
+    public int getHumidity() {
         return humidity;
     }
 
-    public void setHumidity(double humidity) {
+    public void setHumidity(int humidity) {
         this.humidity = humidity;
+    }
+
+    public int getPressure() {
+        return pressure;
+    }
+
+    public void setPressure(int pressure) {
+        this.pressure = pressure;
     }
 
     public double getMin_temp() {

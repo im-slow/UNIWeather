@@ -31,6 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.R;
+import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
 
@@ -40,11 +41,9 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private TextView name_city, desc, temperature;
     private LocationGoogleService locationService;
     private RequestQueue queue;
-    private double lat;
-    private double lon;
-
-    private List<WeatherResult> cities = new ArrayList<>();
-    private AdapterRecycler adapter;
+    private ActualWeather actualWeather;
+    private double actualLat;
+    private double actualLon;
 
     //inizializza l'app
     @Override
@@ -96,9 +95,9 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     public void onLocationChanged(Location location) {
         System.out.println("Lat: "+location.getLatitude());
         System.out.println("Lon: "+location.getLongitude());
-        lat = location.getLatitude();
-        lon = location.getLongitude();
-        get_weather_by_coord(lat,lon);
+        actualLat = location.getLatitude();
+        actualLon = location.getLongitude();
+        get_weather_by_coord(actualLat,actualLon);
         locationService.stopLocationUpdates(this);
 
     }
@@ -162,27 +161,23 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                     @Override
                     public void onResponse(String response) {
                         try {
+                            ActualWeather tempWeather;
                             Log.d("Dati", response);
-                            JSONObject jsonObject = new JSONObject(response);
-                            JSONObject main_object = jsonObject.getJSONObject("main");
-                            JSONArray array = jsonObject.getJSONArray("weather");
-                            JSONObject object = array.getJSONObject(0);
-                            int tempo = (int)main_object.getDouble("temp");
-                            String description = object.getString("description");
-                            String city = jsonObject.getString("name");
-                            String icon = "i"+object.getString("icon");
+                            JSONObject root = new JSONObject(response);
+                            JSONObject coord = root.getJSONObject("coord");
+                            JSONArray array = root.getJSONArray("weather");
+                            JSONObject weather = array.getJSONObject(0);
+                            JSONObject main = root.getJSONObject("main");
+                            JSONObject wind = root.getJSONObject("wind");
+                            JSONObject sys = root.getJSONObject("sys");
 
-                            System.out.println("Città: " + city);
-                            System.out.println("Meteo: " + description);
-                            System.out.println("Temperatura: "+tempo+"°");
-                            System.out.println("Icona: " + icon);
+                            tempWeather = new ActualWeather(coord.getDouble("lon"), coord.getDouble("lat"),
+                                    weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
+                                    main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
+                                    main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
+                                    sys.getString("country"), root.getInt("id"), root.getString("name"));
 
-                            setIcon_view(icon);
-                            temperature.setText(String.valueOf(tempo));
-                            name_city.setText(city);
-                            desc.setText(description);
-
-
+                            System.out.println(tempWeather);
                         } catch (Exception ex){
                             ex.printStackTrace();
                         }
@@ -197,41 +192,41 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void setIcon_view(String icon_name){
-        if(icon_name.equals("i01d"))
+        if(icon_name.equals("01d"))
             icon_view.setImageResource(R.drawable.i01d);
-        else if(icon_name.equals("i01n"))
+        else if(icon_name.equals("01n"))
             icon_view.setImageResource(R.drawable.i01n);
-        else if(icon_name.equals("i02d"))
+        else if(icon_name.equals("02d"))
             icon_view.setImageResource(R.drawable.i02d);
-        else if(icon_name.equals("i02n"))
+        else if(icon_name.equals("02n"))
             icon_view.setImageResource(R.drawable.i02n);
-        else if(icon_name.equals("i03d"))
+        else if(icon_name.equals("03d"))
             icon_view.setImageResource(R.drawable.i03d);
-        else if(icon_name.equals("i03n"))
+        else if(icon_name.equals("03n"))
             icon_view.setImageResource(R.drawable.i03n);
-        else if(icon_name.equals("i04n"))
+        else if(icon_name.equals("04n"))
             icon_view.setImageResource(R.drawable.i04n);
-        else if(icon_name.equals("i04d"))
+        else if(icon_name.equals("04d"))
             icon_view.setImageResource(R.drawable.i04d);
-        else if(icon_name.equals("i09d"))
+        else if(icon_name.equals("09d"))
             icon_view.setImageResource(R.drawable.i09d);
-        else if(icon_name.equals("i09n"))
+        else if(icon_name.equals("09n"))
             icon_view.setImageResource(R.drawable.i09n);
-        else if(icon_name.equals("i10d"))
+        else if(icon_name.equals("10d"))
             icon_view.setImageResource(R.drawable.i10d);
-        else if(icon_name.equals("i10n"))
+        else if(icon_name.equals("10n"))
             icon_view.setImageResource(R.drawable.i10n);
-        else if(icon_name.equals("i11d"))
+        else if(icon_name.equals("11d"))
             icon_view.setImageResource(R.drawable.i11d);
-        else if(icon_name.equals("i11n"))
+        else if(icon_name.equals("11n"))
             icon_view.setImageResource(R.drawable.i11n);
-        else if(icon_name.equals("i13d"))
+        else if(icon_name.equals("13d"))
             icon_view.setImageResource(R.drawable.i13d);
-        else if(icon_name.equals("i13n"))
+        else if(icon_name.equals("13n"))
             icon_view.setImageResource(R.drawable.i13n);
-        else if(icon_name.equals("i50d"))
+        else if(icon_name.equals("50d"))
             icon_view.setImageResource(R.drawable.i50d);
-        else if(icon_name.equals("i50n"))
+        else if(icon_name.equals("50n"))
             icon_view.setImageResource(R.drawable.i50n);
     }
 

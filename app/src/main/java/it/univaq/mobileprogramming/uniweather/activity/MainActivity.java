@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     //metodo onClick per il bottone '+'
-    private void add_city() {
+    public void add_city() {
         Button add_city_button = findViewById(R.id.add_city);
 
         add_city_button.setOnClickListener(new View.OnClickListener() {

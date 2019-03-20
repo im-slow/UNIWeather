@@ -9,6 +9,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -25,8 +27,14 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import it.univaq.mobileprogramming.uniweather.R;
-import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
+import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
+import it.univaq.mobileprogramming.uniweather.model.Sys;
+import it.univaq.mobileprogramming.uniweather.model.WeatherResult;
 
 public class MainActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
 
@@ -35,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private LocationGoogleService locationService;
     private double lat;
     private double lon;
+
+    private List<WeatherResult> cities = new ArrayList<>();
+    private AdapterRecycler adapter;
 
     //inizializza l'app
     @Override
@@ -125,7 +136,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                 startActivity(newActivity);
             }
         });
-    }
+    } // PD
 
     private void startLocalization(){
         int check = ContextCompat

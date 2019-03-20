@@ -56,5 +56,21 @@ public class AddCityActivity extends AppCompatActivity {
         RecyclerView list = findViewById(R.id.main_list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText.length() >= 1){
+                    get_weather_by_name("newText");
+                }
+                return false;
+            }
+        });
     }
+
 }

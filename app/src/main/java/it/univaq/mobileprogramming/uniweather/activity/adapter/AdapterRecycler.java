@@ -1,5 +1,6 @@
 package it.univaq.mobileprogramming.uniweather.activity.adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -10,10 +11,9 @@ import android.widget.TextView;
 import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.R;
-import it.univaq.mobileprogramming.uniweather.model.WeatherResult;
-
 //import it.univaq.mobileprogramming.uniweather.activity.DetailsActivity;
 //import it.univaq.mobileprogramming.uniweather.activity.MapsActivity;
+import it.univaq.mobileprogramming.uniweather.model.WeatherResult;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder> {
 
@@ -78,4 +78,3 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
         }
     }
 }
-

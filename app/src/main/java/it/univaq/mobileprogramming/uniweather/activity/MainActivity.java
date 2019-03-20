@@ -22,17 +22,18 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
+import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
 
 public class MainActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
 
     private ImageView icon_view;
     private TextView name_city, desc, temperature;
     private LocationGoogleService locationService;
+    private RequestQueue queue;
     private double lat;
     private double lon;
 
@@ -41,6 +42,9 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        queue = VolleyRequest.getInstance(this).getRequestQueue();
+
         icon_view = findViewById(R.id.icon_view);
         name_city = findViewById(R.id.city_name);
         temperature = findViewById(R.id.temperature);
@@ -141,8 +145,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         }
     }
 
-    public void get_weather_by_coord(double latitude, double longitude){
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
+    public void get_weather_by_coord(double latitude, double longitude) {
 
         String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=metric&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -181,7 +184,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                 Log.d("Dati","Nessuna città trovata");
             }
         });
-                requestQueue.add(stringRequest);
+                queue.add(stringRequest);
     }
 
     public void setIcon_view(String icon_name){

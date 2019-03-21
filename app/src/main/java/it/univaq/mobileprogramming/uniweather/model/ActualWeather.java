@@ -5,7 +5,6 @@ public class ActualWeather {
     private String city_name,description,icon_name, country;
     private double temp,min_temp,max_temp,wind_speed,latitude,longitude;
 
-
     @Override
     public String toString() {
         return "ActualWeather{" +
@@ -24,6 +23,17 @@ public class ActualWeather {
                 ", latitude=" + latitude +
                 ", longitude=" + longitude +
                 '}';
+    }
+
+    public ActualWeather() {
+
+    }
+
+    public ActualWeather(double latitude, double longitude, String country, String city_name) {
+        this.city_name = city_name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.country = country;
     }
 
     public ActualWeather(double latitude, double longitude, String description, String icon_name,

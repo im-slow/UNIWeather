@@ -5,11 +5,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient"
     android:orientation="vertical"
-    tools:context=".activity.AddCityActivity">
-
-    <SearchView
-        android:layout_width="match_parent"
-        android:layout_height="45dp" />
+    tools:context=".activity.MainActivity">
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/main_list"

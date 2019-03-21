@@ -25,4 +25,14 @@ public class VolleyRequest {
     public RequestQueue getRequestQueue(){
         return queue;
     }
+
+    public void downloadCities(Response.Listener<String> listener){
+
+        StringRequest request = new StringRequest(
+                StringRequest.Method.GET,
+                "http://api.openweathermap.org/data/2.5/find?lat=55.5&lon=37.5&cnt=10&appid=7368b1dcdbc2b20401886a17908ac573",
+                listener,
+                null);
+        queue.add(request);
+    }
 }

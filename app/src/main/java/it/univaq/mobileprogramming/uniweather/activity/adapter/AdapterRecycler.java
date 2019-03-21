@@ -1,6 +1,5 @@
 package it.univaq.mobileprogramming.uniweather.activity.adapter;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,13 +12,14 @@ import java.util.List;
 import it.univaq.mobileprogramming.uniweather.R;
 //import it.univaq.mobileprogramming.uniweather.activity.DetailsActivity;
 //import it.univaq.mobileprogramming.uniweather.activity.MapsActivity;
+import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.model.WeatherResult;
 
 public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHolder> {
 
-    private List<WeatherResult> data;
+    private List<ActualWeather> data;
 
-    public AdapterRecycler(List<WeatherResult> data){
+    public AdapterRecycler(List<ActualWeather> data){
         this.data = data;
     }
 
@@ -34,9 +34,9 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
-        WeatherResult city = data.get(i);
-        viewHolder.title.setText(city.getName());
-        viewHolder.subtitle.setText(city.getSys().getCountry());
+        ActualWeather city = data.get(i);
+        viewHolder.title.setText(city.getCity_name());
+        viewHolder.subtitle.setText(city.getCountry());
     }
 
     @Override

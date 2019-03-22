@@ -29,7 +29,7 @@ import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
 
-public class DetailsActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
+public class DetailsActivity extends AppCompatActivity {
 
     private ImageView icon_view;
     private TextView name_city, desc, temperature;
@@ -46,39 +46,27 @@ public class DetailsActivity extends AppCompatActivity implements LocationGoogle
         setContentView(R.layout.details_activity);
         Double latitude = getIntent().getDoubleExtra("latitude", 0);
         Double longitude = getIntent().getDoubleExtra("longitude", 0);
+        System.out.println(" latitude: " + latitude +" longitude: "+ longitude);
 
         queue = VolleyRequest.getInstance(this).getRequestQueue();
+
+        get_weather_by_coord(latitude, longitude);
 
         icon_view = findViewById(R.id.icon_view);
         name_city = findViewById(R.id.city_name);
         temperature = findViewById(R.id.temperature);
         desc = findViewById(R.id.condition);
-        get_weather_by_coord(latitude, longitude);
+
         setTitle(null);
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 1){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                locationService = new LocationGoogleService();
-                locationService.onCreate(this, this);
-                locationService.requestLocationUpdates(this);
-            } else {
-                finish();
-            }
-        }
-    }
 
     @Override
     protected void onStop() {
         super.onStop();
-        locationService.stopLocationUpdates(this);
     }
 
     @Override
@@ -86,16 +74,6 @@ public class DetailsActivity extends AppCompatActivity implements LocationGoogle
         super.onResume();
     }
 
-    @Override
-    public void onLocationChanged(Location location) {
-        System.out.println("Lat: "+location.getLatitude());
-        System.out.println("Lon: "+location.getLongitude());
-        actualLat = location.getLatitude();
-        actualLon = location.getLongitude();
-        get_weather_by_coord(actualLat,actualLon);
-        locationService.stopLocationUpdates(this);
-
-    }
 
     //crea il menù all'avvio dell'app
     @Override
@@ -119,20 +97,6 @@ public class DetailsActivity extends AppCompatActivity implements LocationGoogle
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private void startLocalization(){
-        int check = ContextCompat
-                .checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION);
-        if(check == PackageManager.PERMISSION_GRANTED){
-            locationService = new LocationGoogleService();
-            locationService.onCreate(this, this);
-            locationService.requestLocationUpdates(this);
-        } else {
-            ActivityCompat.requestPermissions(DetailsActivity.this,
-                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 1);
-        }
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
@@ -159,7 +123,13 @@ public class DetailsActivity extends AppCompatActivity implements LocationGoogle
                                     main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
                                     sys.getString("country"), root.getInt("id"), root.getString("name"));
 
-                            System.out.println(tempWeather);
+                            actualWeather = new ActualWeather();
+                            actualWeather = tempWeather;
+
+                            setIcon_view(actualWeather.getIcon_name());
+                            name_city.setText(actualWeather.getCity_name());
+                            temperature.setText(Integer.toString(((int) actualWeather.getTemp())));
+                            desc.setText(actualWeather.getDescription());
                         } catch (Exception ex){
                             ex.printStackTrace();
                         }

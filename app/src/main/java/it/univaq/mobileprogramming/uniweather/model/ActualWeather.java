@@ -26,6 +26,10 @@ public class ActualWeather {
                 '}';
     }
 
+    public  ActualWeather(){
+
+    }
+
     public ActualWeather(double latitude, double longitude, String description, String icon_name,
                          double temp, int pressure, int humidity, double min_temp, double max_temp,
                          double wind_speed, int wind_degree, String country, int city_id, String city_name) {

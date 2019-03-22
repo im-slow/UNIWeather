@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
@@ -26,43 +24,38 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import it.univaq.mobileprogramming.uniweather.R;
-import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
 
-public class MainActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
+public class DetailsActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
 
+    private ImageView icon_view;
+    private TextView name_city, desc, temperature;
     private LocationGoogleService locationService;
     private RequestQueue queue;
-    private AdapterRecycler adapter;
+    private ActualWeather actualWeather;
     private double actualLat;
     private double actualLon;
-    private List<ActualWeather> cities = new ArrayList<>();
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        Toolbar mainToolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(mainToolbar);
+        setContentView(R.layout.details_activity);
 
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
+        icon_view = findViewById(R.id.icon_view);
+        name_city = findViewById(R.id.city_name);
+        temperature = findViewById(R.id.temperature);
+        desc = findViewById(R.id.condition);
         startLocalization();
         setTitle(null);
 
-        adapter = new AdapterRecycler(cities);
-        RecyclerView list = findViewById(R.id.city_list);
-        list.setLayoutManager(new LinearLayoutManager(this));
-        list.setAdapter(adapter);
+        Toolbar mainToolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(mainToolbar);
     }
 
     @Override
@@ -89,8 +82,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     @Override
     protected void onResume() {
         super.onResume();
-        if (adapter != null) adapter.notifyDataSetChanged();
-        Log.d("Dati", cities.toString());
     }
 
     @Override
@@ -99,11 +90,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         System.out.println("Lon: "+location.getLongitude());
         actualLat = location.getLatitude();
         actualLon = location.getLongitude();
-        locationService.stopLocationUpdates(this);
-
         get_weather_by_coord(actualLat,actualLon);
-        if (adapter != null) adapter.notifyDataSetChanged();
-
+        locationService.stopLocationUpdates(this);
 
     }
 
@@ -140,13 +128,14 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             locationService.onCreate(this, this);
             locationService.requestLocationUpdates(this);
         } else {
-            ActivityCompat.requestPermissions(MainActivity.this,
+            ActivityCompat.requestPermissions(DetailsActivity.this,
                     new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 1);
         }
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
-        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
+
+        String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=metric&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override
@@ -154,24 +143,21 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                         try {
                             ActualWeather tempWeather;
                             Log.d("Dati", response);
-                            JSONObject info = new JSONObject(response);
-                            JSONArray list = info.getJSONArray("list");
-                            for (int i = 0; i < info.getInt("count"); i++) {
-                                JSONObject item = list.getJSONObject(i);
-                                JSONObject coord = item.getJSONObject("coord");
-                                JSONArray array = item.getJSONArray("weather");
-                                JSONObject weather = array.getJSONObject(0);
-                                JSONObject main = item.getJSONObject("main");
-                                JSONObject wind = item.getJSONObject("wind");
-                                JSONObject sys = item.getJSONObject("sys");
+                            JSONObject root = new JSONObject(response);
+                            JSONObject coord = root.getJSONObject("coord");
+                            JSONArray array = root.getJSONArray("weather");
+                            JSONObject weather = array.getJSONObject(0);
+                            JSONObject main = root.getJSONObject("main");
+                            JSONObject wind = root.getJSONObject("wind");
+                            JSONObject sys = root.getJSONObject("sys");
 
-                                tempWeather = new ActualWeather(coord.getDouble("lon"), coord.getDouble("lat"),
-                                        weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
-                                        main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
-                                        main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
-                                        sys.getString("country"), item.getInt("id"), item.getString("name"));
-                                cities.add(tempWeather);
-                            }
+                            tempWeather = new ActualWeather(coord.getDouble("lon"), coord.getDouble("lat"),
+                                    weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
+                                    main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
+                                    main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
+                                    sys.getString("country"), root.getInt("id"), root.getString("name"));
+
+                            System.out.println(tempWeather);
                         } catch (Exception ex){
                             ex.printStackTrace();
                         }
@@ -182,10 +168,10 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                 Log.d("Dati","Nessuna città trovata");
             }
         });
-        queue.add(stringRequest);
+                queue.add(stringRequest);
     }
 
-    /*public void setIcon_view(String icon_name){
+    public void setIcon_view(String icon_name){
         if(icon_name.equals("01d"))
             icon_view.setImageResource(R.drawable.i01d);
         else if(icon_name.equals("01n"))
@@ -222,7 +208,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             icon_view.setImageResource(R.drawable.i50d);
         else if(icon_name.equals("50n"))
             icon_view.setImageResource(R.drawable.i50n);
-    }*/
+    }
 
 
 }

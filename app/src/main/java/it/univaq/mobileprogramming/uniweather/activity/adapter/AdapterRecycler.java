@@ -1,5 +1,6 @@
 package it.univaq.mobileprogramming.uniweather.activity.adapter;
 
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import org.w3c.dom.Text;
 import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.R;
+import it.univaq.mobileprogramming.uniweather.activity.DetailsActivity;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 
 
@@ -37,7 +39,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
 
         ActualWeather cityWeather = data.get(i);
         viewHolder.city.setText(cityWeather.getCity_name());
-        viewHolder.temp.setText(Double.toString(cityWeather.getTemp()));
+        viewHolder.temp.setText(Double.toString((Math.round(cityWeather.getTemp() * 10) / 10.0)) + "°C");
         if(cityWeather.getIcon_name().equals("01d"))
             viewHolder.icon.setImageResource(R.drawable.i01d);
         else if(cityWeather.getIcon_name().equals("01n"))
@@ -96,7 +98,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
             city = view.findViewById(R.id.city);
             temp = view.findViewById(R.id.temp);
             icon = view.findViewById(R.id.icon);
-            /*
+
             // Define the click event on item
             view.setOnClickListener(new View.OnClickListener() {
 
@@ -104,17 +106,15 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                 public void onClick(View v) {
 
                     // Open another Activity and pass to it the right city
-                    WeatherResult city = data.get(getAdapterPosition());
-                    Intent intent = new Intent(v.getContext(), MapsActivity.class);
-                    intent.putExtra("cityName", city.getName());
-                    intent.putExtra("regionName", city.getRegion());
+                    ActualWeather city = data.get(getAdapterPosition());
+                    Intent intent = new Intent(v.getContext(), DetailsActivity.class);
                     intent.putExtra("latitude", city.getLatitude());
                     intent.putExtra("longitude", city.getLongitude());
                     v.getContext().startActivity(intent);
                 }
 
             });
-            */
+
         }
     }
 

@@ -44,6 +44,8 @@ public class DetailsActivity extends AppCompatActivity implements LocationGoogle
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_activity);
+        Double latitude = getIntent().getDoubleExtra("latitude", 0);
+        Double longitude = getIntent().getDoubleExtra("longitude", 0);
 
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
@@ -51,7 +53,7 @@ public class DetailsActivity extends AppCompatActivity implements LocationGoogle
         name_city = findViewById(R.id.city_name);
         temperature = findViewById(R.id.temperature);
         desc = findViewById(R.id.condition);
-        startLocalization();
+        get_weather_by_coord(latitude, longitude);
         setTitle(null);
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);

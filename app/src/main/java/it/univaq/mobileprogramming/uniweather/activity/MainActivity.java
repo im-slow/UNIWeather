@@ -1,6 +1,7 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -15,6 +16,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -51,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        add_favorite();
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
@@ -118,7 +123,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         Settings.save(getApplicationContext(), Settings.FIRST_TIME, false);
 
         if (adapter != null) adapter.notifyDataSetChanged();
-        Log.d("Dati", cities.toString());
     }
 
     @Override
@@ -276,6 +280,18 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             // Delete by RoomDatabase
 
         }
+    }
+
+    private void add_favorite() {
+        Button add_favorite_button = findViewById(R.id.add_city);
+
+        add_favorite_button.setOnClickListener(new View.OnClickListener() {
+
+            public void onClick(View v) {
+                Intent newActivity = new Intent(v.getContext(), AddFavoriteActivity.class);
+                startActivity(newActivity);
+            }
+        });
     }
 
     /*public void setIcon_view(String icon_name){

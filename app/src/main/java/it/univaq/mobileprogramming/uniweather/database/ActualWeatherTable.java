@@ -12,6 +12,7 @@ import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 public class ActualWeatherTable {
     // Name of the table
     static final String TABLE_NAME = "actualWeathers";
+    static final String FAVORITE_TABLE = "favorites";
 
     // Columns name
     static final String ID = "id";
@@ -80,8 +81,17 @@ public class ActualWeatherTable {
     static void insert(SQLiteDatabase db, ActualWeather city ){
 
         ContentValues values = new ContentValues();
+        values.put(WIND_DEGREE, city.getWind_degree());
+        values.put(HUMIDITY, city.getHumidity());
+        values.put(PRESSURE, city.getPressure());
         values.put(NAME, city.getCity_name());
+        values.put(DESCRIPTION, city.getDescription());
+        values.put(ICON_NAME, city.getIcon_name());
         values.put(COUNTRY, city.getCountry());
+        values.put(TEMP, city.getTemp());
+        values.put(MIN_TEMP, city.getMin_temp());
+        values.put(MAX_TEMP, city.getMax_temp());
+        values.put(WIND_SPEED, city.getWind_speed());
         values.put(LATITUDE, city.getLatitude());
         values.put(LONGITUDE, city.getLongitude());
         long id = db.insert(TABLE_NAME, null, values);

@@ -1,13 +1,13 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.Manifest;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,10 +15,6 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.ImageView;
-import android.widget.TextView;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -27,16 +23,20 @@ import com.android.volley.toolbox.StringRequest;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
+import it.univaq.mobileprogramming.uniweather.database.Database;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
+import it.univaq.mobileprogramming.uniweather.utility.Settings;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
 
-public class MainActivity extends AppCompatActivity implements LocationGoogleService.LocationListener {
+public class MainActivity extends AppCompatActivity implements LocationGoogleService.LocationListener, SwipeRefreshLayout.OnRefreshListener {
 
     private LocationGoogleService locationService;
     private RequestQueue queue;
@@ -44,6 +44,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private double actualLat;
     private double actualLon;
     private List<ActualWeather> cities = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
 
     //inizializza l'app
     @Override
@@ -63,6 +64,21 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         RecyclerView list = findViewById(R.id.city_list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
+
+        swipeRefreshLayout = findViewById(R.id.main_swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
+        long time = Settings.loadLong(getApplicationContext(), Settings.LAST_ACCESS, -1);
+        if(time != -1){
+
+            SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS", Locale.getDefault());
+            //ultimo aggiornamento meteo
+            //String date = format.format(new Date(time));
+            //text.setText(date);
+        }
+        Settings.save(getApplicationContext(), Settings.LAST_ACCESS, System.currentTimeMillis());
+
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -89,8 +105,31 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     @Override
     protected void onResume() {
         super.onResume();
+        if(Settings.loadBoolean(getApplicationContext(), Settings.FIRST_TIME, true)){
+
+            clearDataFromDB();
+
+
+        } else {
+            // If is not the first time you open the app, get all saved data from Database
+
+            loadDataFromDB();
+        }
+        Settings.save(getApplicationContext(), Settings.FIRST_TIME, false);
+
         if (adapter != null) adapter.notifyDataSetChanged();
         Log.d("Dati", cities.toString());
+    }
+
+    @Override
+    public void onRefresh() {
+
+        clearDataFromDB();
+
+        get_weather_by_coord(actualLat, actualLon);
+
+        if (adapter != null) adapter.notifyDataSetChanged();
+
     }
 
     @Override
@@ -170,11 +209,17 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                                         main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
                                         main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
                                         sys.getString("country"), item.getInt("id"), item.getString("name"));
+
+                                saveDataInDB(tempWeather);
                                 cities.add(tempWeather);
                             }
                         } catch (Exception ex){
                             ex.printStackTrace();
                         }
+                        swipeRefreshLayout.setRefreshing(false);
+
+                        // Refresh list because the adapter data are changed
+                        if(adapter != null) adapter.notifyDataSetChanged();
                     }
                 }, new Response.ErrorListener() {
             @Override
@@ -183,6 +228,54 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             }
         });
         queue.add(stringRequest);
+    }
+
+    /**
+     * Save city in database. The preference defines if you use SQLiteOpenHelper or RoomDatabase
+     * @param city to save
+     */
+    private void saveDataInDB(final ActualWeather city){
+
+        // Save by SQLiteOpenHelper
+        Database.getInstance(getApplicationContext()).save(city);
+
+        // Save by RoomDatabase
+
+    }
+
+    /**
+     * Load all cities from database. The preference defines if you use SQLiteOpenHelper or RoomDatabase
+     */
+    private void loadDataFromDB(){
+
+        if(Settings.loadBoolean(getApplicationContext(), Settings.SWITCH_DB, true)) {
+            // Get by SQLiteOpenHelper
+            cities.addAll(Database.getInstance(getApplicationContext()).getAllCities());
+            if(adapter != null) adapter.notifyDataSetChanged();
+
+        } else {
+            // Get by RoomDatabase
+
+        }
+    }
+
+    /**
+     * Clear data from database. The preference defines if you use SQLiteOpenHelper or RoomDatabase
+     */
+    private void clearDataFromDB(){
+
+        cities.clear();
+        if(adapter != null) adapter.notifyDataSetChanged();
+
+        if(Settings.loadBoolean(getApplicationContext(), Settings.SWITCH_DB, true)) {
+
+            // Delete by SQLiteOpenHelper
+            Database.getInstance(getApplicationContext()).delete();
+
+        } else {
+            // Delete by RoomDatabase
+
+        }
     }
 
     /*public void setIcon_view(String icon_name){

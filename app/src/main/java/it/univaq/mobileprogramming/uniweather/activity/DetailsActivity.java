@@ -1,61 +1,39 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
-import android.Manifest;
-import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.location.Location;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
-import org.json.JSONArray;
-import org.json.JSONObject;
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
-import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
-import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
+
 
 public class DetailsActivity extends AppCompatActivity {
 
     private ImageView icon_view;
     private TextView name_city, desc, temperature;
-    private LocationGoogleService locationService;
-    private RequestQueue queue;
     private ActualWeather actualWeather;
-    private double actualLat;
-    private double actualLon;
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_activity);
-        Double latitude = getIntent().getDoubleExtra("latitude", 0);
-        Double longitude = getIntent().getDoubleExtra("longitude", 0);
-        System.out.println(" latitude: " + latitude +" longitude: "+ longitude);
 
-        queue = VolleyRequest.getInstance(this).getRequestQueue();
-
-        get_weather_by_coord(latitude, longitude);
+        actualWeather = (ActualWeather) getIntent().getSerializableExtra("ActualWeather");
 
         icon_view = findViewById(R.id.icon_view);
         name_city = findViewById(R.id.city_name);
         temperature = findViewById(R.id.temperature);
         desc = findViewById(R.id.condition);
+
+        setIcon_view(actualWeather.getIcon_name());
+        name_city.setText(actualWeather.getCity_name());
+        temperature.setText(Integer.toString(((int) actualWeather.getTemp())));
+        desc.setText(actualWeather.getDescription());
 
         setTitle(null);
 
@@ -99,50 +77,6 @@ public class DetailsActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public void get_weather_by_coord(double latitude, double longitude) {
-
-        String url = "http://api.openweathermap.org/data/2.5/weather?lat="+latitude+"&lon="+longitude+"&units=metric&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
-
-                    @Override
-                    public void onResponse(String response) {
-                        try {
-                            ActualWeather tempWeather;
-                            Log.d("Dati", response);
-                            JSONObject root = new JSONObject(response);
-                            JSONObject coord = root.getJSONObject("coord");
-                            JSONArray array = root.getJSONArray("weather");
-                            JSONObject weather = array.getJSONObject(0);
-                            JSONObject main = root.getJSONObject("main");
-                            JSONObject wind = root.getJSONObject("wind");
-                            JSONObject sys = root.getJSONObject("sys");
-
-                            tempWeather = new ActualWeather(coord.getDouble("lon"), coord.getDouble("lat"),
-                                    weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
-                                    main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
-                                    main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
-                                    sys.getString("country"), root.getInt("id"), root.getString("name"));
-
-                            actualWeather = new ActualWeather();
-                            actualWeather = tempWeather;
-
-                            setIcon_view(actualWeather.getIcon_name());
-                            name_city.setText(actualWeather.getCity_name());
-                            temperature.setText(Integer.toString(((int) actualWeather.getTemp())));
-                            desc.setText(actualWeather.getDescription());
-                        } catch (Exception ex){
-                            ex.printStackTrace();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("Dati","Nessuna città trovata");
-            }
-        });
-                queue.add(stringRequest);
-    }
-
     public void setIcon_view(String icon_name){
         if(icon_name.equals("01d"))
             icon_view.setImageResource(R.drawable.i01d);
@@ -181,6 +115,5 @@ public class DetailsActivity extends AppCompatActivity {
         else if(icon_name.equals("50n"))
             icon_view.setImageResource(R.drawable.i50n);
     }
-
 
 }

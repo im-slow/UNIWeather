@@ -1,6 +1,7 @@
 package it.univaq.mobileprogramming.uniweather.activity.adapter;
 
 import android.content.Intent;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,6 +12,7 @@ import android.widget.TextView;
 
 import org.w3c.dom.Text;
 
+import java.io.Serializable;
 import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.R;
@@ -108,8 +110,7 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
                     // Open another Activity and pass to it the right city
                     ActualWeather city = data.get(getAdapterPosition());
                     Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                    intent.putExtra("latitude", city.getLatitude());
-                    intent.putExtra("longitude", city.getLongitude());
+                    intent.putExtra("ActualWeather", city);
                     v.getContext().startActivity(intent);
                 }
 

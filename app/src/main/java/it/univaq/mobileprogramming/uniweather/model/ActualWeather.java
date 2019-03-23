@@ -1,6 +1,8 @@
 package it.univaq.mobileprogramming.uniweather.model;
 
-public class ActualWeather {
+import java.io.Serializable;
+
+public class ActualWeather implements Serializable {
     private int city_id,wind_degree,humidity,pressure;
     private String city_name,description,icon_name, country;
     private double temp,min_temp,max_temp,wind_speed,latitude,longitude;

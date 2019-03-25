@@ -90,7 +90,6 @@ public class AdapterRecycler extends RecyclerView.Adapter<AdapterRecycler.ViewHo
     class ViewHolder extends RecyclerView.ViewHolder {
 
         TextView city;
-        TextView country;
         TextView temp;
         ImageView icon;
 

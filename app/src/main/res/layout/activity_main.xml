@@ -15,14 +15,15 @@
         android:layout_height="56dp">
 
         <Button
-            android:id="@+id/add_city"
+            android:id="@+id/favourites_cities"
             android:layout_width="35dp"
             android:layout_height="35dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:layout_marginStart="9dp"
             android:background="@drawable/ic_star_grey_24dp"
-            android:gravity="start" />
+            android:gravity="start"
+            android:onClick="favourite_click" />
 
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolbar"

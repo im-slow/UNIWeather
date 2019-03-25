@@ -25,6 +25,7 @@
 
         </activity>
         <activity android:name=".activity.DetailsActivity"/>
+        <activity android:name=".activity.FavouriteCitiesActivity"/>
     </application>
 
 </manifest>

@@ -1,10 +1,12 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import it.univaq.mobileprogramming.uniweather.R;
@@ -75,6 +77,10 @@ public class DetailsActivity extends AppCompatActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void favourite_click(View v){
+        startActivity(new Intent(MainActivity.this, FavouriteCitiesActivity.class));
     }
 
     public void setIcon_view(String icon_name){

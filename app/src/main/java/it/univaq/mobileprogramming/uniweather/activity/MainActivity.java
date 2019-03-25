@@ -55,7 +55,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        add_favorite();
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
@@ -282,15 +281,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         }
     }
 
-    private void add_favorite() {
-        Button add_favorite_button = findViewById(R.id.add_city);
-
-        add_favorite_button.setOnClickListener(new View.OnClickListener() {
-
-            public void onClick(View v) {
-                Intent newActivity = new Intent(v.getContext(), AddFavoriteActivity.class);
-                startActivity(newActivity);
-            }
-        });
+    public void favourite_click(View v){
+        startActivity(new Intent(MainActivity.this, FavouriteCitiesActivity.class));
     }
 }

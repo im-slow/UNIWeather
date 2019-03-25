@@ -80,7 +80,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void favourite_click(View v){
-        startActivity(new Intent(MainActivity.this, FavouriteCitiesActivity.class));
+        startActivity(new Intent(DetailsActivity.this, FavouriteCitiesActivity.class));
     }
 
     public void setIcon_view(String icon_name){

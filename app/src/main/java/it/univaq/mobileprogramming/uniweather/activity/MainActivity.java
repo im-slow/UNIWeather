@@ -293,45 +293,4 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             }
         });
     }
-
-    /*public void setIcon_view(String icon_name){
-        if(icon_name.equals("01d"))
-            icon_view.setImageResource(R.drawable.i01d);
-        else if(icon_name.equals("01n"))
-            icon_view.setImageResource(R.drawable.i01n);
-        else if(icon_name.equals("02d"))
-            icon_view.setImageResource(R.drawable.i02d);
-        else if(icon_name.equals("02n"))
-            icon_view.setImageResource(R.drawable.i02n);
-        else if(icon_name.equals("03d"))
-            icon_view.setImageResource(R.drawable.i03d);
-        else if(icon_name.equals("03n"))
-            icon_view.setImageResource(R.drawable.i03n);
-        else if(icon_name.equals("04n"))
-            icon_view.setImageResource(R.drawable.i04n);
-        else if(icon_name.equals("04d"))
-            icon_view.setImageResource(R.drawable.i04d);
-        else if(icon_name.equals("09d"))
-            icon_view.setImageResource(R.drawable.i09d);
-        else if(icon_name.equals("09n"))
-            icon_view.setImageResource(R.drawable.i09n);
-        else if(icon_name.equals("10d"))
-            icon_view.setImageResource(R.drawable.i10d);
-        else if(icon_name.equals("10n"))
-            icon_view.setImageResource(R.drawable.i10n);
-        else if(icon_name.equals("11d"))
-            icon_view.setImageResource(R.drawable.i11d);
-        else if(icon_name.equals("11n"))
-            icon_view.setImageResource(R.drawable.i11n);
-        else if(icon_name.equals("13d"))
-            icon_view.setImageResource(R.drawable.i13d);
-        else if(icon_name.equals("13n"))
-            icon_view.setImageResource(R.drawable.i13n);
-        else if(icon_name.equals("50d"))
-            icon_view.setImageResource(R.drawable.i50d);
-        else if(icon_name.equals("50n"))
-            icon_view.setImageResource(R.drawable.i50n);
-    }*/
-
-
 }

@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -29,6 +30,7 @@ import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -56,12 +58,13 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        startLocalization();
+
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
 
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
-        startLocalization();
         setTitle(null);
 
         adapter = new AdapterRecycler(cities);
@@ -72,13 +75,13 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         swipeRefreshLayout = findViewById(R.id.main_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        TextView text = findViewById(R.id.main_text);
         long time = Settings.loadLong(getApplicationContext(), Settings.LAST_ACCESS, -1);
         if(time != -1){
 
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS", Locale.getDefault());
-            //ultimo aggiornamento meteo
-            //String date = format.format(new Date(time));
-            //text.setText(date);
+            String date = format.format(new Date(time));
+            text.setText(date);
         }
         Settings.save(getApplicationContext(), Settings.LAST_ACCESS, System.currentTimeMillis());
 
@@ -113,6 +116,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
             clearDataFromDB();
 
+            get_weather_by_coord(actualLat,actualLon);
+
 
         } else {
             // If is not the first time you open the app, get all saved data from Database
@@ -143,7 +148,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         actualLon = location.getLongitude();
         locationService.stopLocationUpdates(this);
 
-        get_weather_by_coord(actualLat,actualLon);
         if (adapter != null) adapter.notifyDataSetChanged();
 
 
@@ -234,51 +238,28 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     /**
-     * Save city in database. The preference defines if you use SQLiteOpenHelper or RoomDatabase
-     * @param city to save
+     * Save forecast in the database.
      */
     private void saveDataInDB(final ActualWeather city){
-
-        // Save by SQLiteOpenHelper
         Database.getInstance(getApplicationContext()).save(city);
-
-        // Save by RoomDatabase
-
     }
 
     /**
-     * Load all cities from database. The preference defines if you use SQLiteOpenHelper or RoomDatabase
+     * Load all forecast from database.
      */
     private void loadDataFromDB(){
-
-        if(Settings.loadBoolean(getApplicationContext(), Settings.SWITCH_DB, true)) {
-            // Get by SQLiteOpenHelper
-            cities.addAll(Database.getInstance(getApplicationContext()).getAllCities());
-            if(adapter != null) adapter.notifyDataSetChanged();
-
-        } else {
-            // Get by RoomDatabase
-
-        }
+        cities.addAll(Database.getInstance(getApplicationContext()).getAllCities());
+        if(adapter != null) adapter.notifyDataSetChanged();
     }
 
     /**
-     * Clear data from database. The preference defines if you use SQLiteOpenHelper or RoomDatabase
+     * Clear data from database.
      */
     private void clearDataFromDB(){
-
         cities.clear();
         if(adapter != null) adapter.notifyDataSetChanged();
+        Database.getInstance(getApplicationContext()).delete();
 
-        if(Settings.loadBoolean(getApplicationContext(), Settings.SWITCH_DB, true)) {
-
-            // Delete by SQLiteOpenHelper
-            Database.getInstance(getApplicationContext()).delete();
-
-        } else {
-            // Delete by RoomDatabase
-
-        }
     }
 
     public void favourite_click(View v){

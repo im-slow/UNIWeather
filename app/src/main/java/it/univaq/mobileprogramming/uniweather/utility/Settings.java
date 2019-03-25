@@ -11,9 +11,6 @@ public class Settings {
 
     public static final String LAST_ACCESS = "last_access_time"; // Used to save the last timestamp when the user open the app
     public static final String FIRST_TIME = "first_time"; // Used to remember if is the first time that the user open the app
-    public static final String SWITCH_DB = "switch_database"; // Used to switch from SQLite DB to RoomDB and vice versa
-    public static final String SWITCH_HTTP = "switch_http"; // Used to switch from URLConnection to Volley and vice versa
-    public static final String SWITCH_LOCATION = "switch_location"; // Used to switch from LocationManager to GoogleService and vice versa
 
     public static void save(Context context, String key, long value){
 

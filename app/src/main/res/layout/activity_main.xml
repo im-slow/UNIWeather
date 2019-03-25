@@ -10,6 +10,7 @@
 
 
     <!-- The rest of your code here -->
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="56dp">
@@ -39,7 +40,19 @@
             android:text="@string/banner"
             android:textSize="18sp"
             android:textStyle="bold" />
+
     </RelativeLayout>
+
+    <TextView
+        android:id="@+id/main_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-smallcaps"
+        android:padding="8dp"
+        android:textColor="@android:color/black"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        tools:text="Date" />
 
     <android.support.v4.widget.SwipeRefreshLayout
     android:id="@+id/main_swipe"

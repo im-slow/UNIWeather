@@ -16,7 +16,8 @@ import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 public class DetailsActivity extends AppCompatActivity {
 
     private ImageView icon_view;
-    private TextView name_city, desc, temperature;
+    private TextView name_city, desc, temperature, min_temp, max_temp,
+                    wind_speed, wind_degree, pressure, humidity;
     private ActualWeather actualWeather;
 
     //inizializza l'app
@@ -31,11 +32,23 @@ public class DetailsActivity extends AppCompatActivity {
         name_city = findViewById(R.id.city_name);
         temperature = findViewById(R.id.temperature);
         desc = findViewById(R.id.condition);
+        min_temp = findViewById(R.id.min_temp);
+        max_temp = findViewById(R.id.max_temp);
+        wind_speed = findViewById(R.id.wind_speed);
+        wind_degree = findViewById(R.id.wind_degree);
+        pressure = findViewById(R.id.pressure);
+        humidity = findViewById(R.id.humidity);
 
         setIcon_view(actualWeather.getIcon_name());
         name_city.setText(actualWeather.getCity_name());
         temperature.setText(Integer.toString(((int) actualWeather.getTemp())));
         desc.setText(actualWeather.getDescription());
+        min_temp.setText(actualWeather.getMin_temp()+"°C");
+        max_temp.setText(actualWeather.getMax_temp()+"°C");
+        wind_speed.setText(actualWeather.getWind_speed()+" km/h");
+        wind_degree.setText(actualWeather.getWind_degree()+"°");
+        pressure.setText(actualWeather.getPressure()+"");
+        humidity.setText(actualWeather.getHumidity()+"%");
 
         setTitle(null);
 

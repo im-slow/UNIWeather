@@ -1,15 +1,20 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
+
 import it.univaq.mobileprogramming.uniweather.R;
+import it.univaq.mobileprogramming.uniweather.database.Database;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 
 
@@ -18,13 +23,17 @@ public class DetailsActivity extends AppCompatActivity {
     private ImageView icon_view;
     private TextView name_city, desc, temperature, min_temp, max_temp,
                     wind_speed, wind_degree, pressure, humidity;
+    private Button star;
     private ActualWeather actualWeather;
+    private List<ActualWeather> favourites = new ArrayList<>(); // per vedere se presente nel DB, si può ottimizzare con una selectByCity or selectByCoord
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.details_activity);
+
+        star = findViewById(R.id.favourite_cities);
 
         actualWeather = (ActualWeather) getIntent().getSerializableExtra("ActualWeather");
 
@@ -52,6 +61,13 @@ public class DetailsActivity extends AppCompatActivity {
 
         setTitle(null);
 
+        /*
+        if(favourites.contains(actualWeather.getCity_name())) {
+            star.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+        } else {
+            star.setBackgroundResource(R.drawable.ic_star_border_empty_24dp);
+        }
+        */
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
     }
@@ -93,7 +109,32 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void favourite_click(View v){
-        startActivity(new Intent(DetailsActivity.this, FavouriteCitiesActivity.class));
+        saveDataInDB(actualWeather);
+        /*
+        loadDataFromDB();
+        if(favourites.contains(actualWeather.getCity_name())) {
+            star.setBackgroundResource(R.drawable.ic_star_gold_24dp);
+            saveDataInDB(actualWeather);
+        } else {
+            star.setBackgroundResource(R.drawable.ic_star_border_empty_24dp);
+            //removeData
+        }
+        */
+        //startActivity(new Intent(DetailsActivity.this, FavouriteCitiesActivity.class));
+    }
+
+    /**
+     * Save forecast in the database.
+     */
+    private void saveDataInDB(final ActualWeather favorite){
+        Database.getInstance(getApplicationContext()).saveFavourite(favorite);
+    }
+
+    /**
+     * Load all forecast from database.
+     */
+    private void loadDataFromDB(){
+        favourites.addAll(Database.getInstance(getApplicationContext()).getAllCities());
     }
 
     public void setIcon_view(String icon_name){

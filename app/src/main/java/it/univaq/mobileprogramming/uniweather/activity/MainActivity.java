@@ -192,13 +192,14 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
-        swipeRefreshLayout.setRefreshing(true);
+
         String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override
                     public void onResponse(String response) {
                         try {
+                            swipeRefreshLayout.setRefreshing(true);
                             ActualWeather tempWeather;
                             Log.d("Dati", response);
                             JSONObject info = new JSONObject(response);
@@ -225,7 +226,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                             ex.printStackTrace();
                         }
                         swipeRefreshLayout.setRefreshing(false);
-
                         // Refresh list because the adapter data are changed
                         if(adapter != null) adapter.notifyDataSetChanged();
                     }

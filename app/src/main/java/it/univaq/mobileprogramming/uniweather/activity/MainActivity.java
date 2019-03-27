@@ -192,6 +192,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
+        swipeRefreshLayout.setRefreshing(true);
         String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 

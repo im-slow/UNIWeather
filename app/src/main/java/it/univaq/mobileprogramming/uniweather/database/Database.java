@@ -33,25 +33,37 @@ public class Database extends SQLiteOpenHelper {
     @Override
     public void onCreate(SQLiteDatabase db) {
         ActualWeatherTable.create(db);
+        FavouriteTable.create(db);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         ActualWeatherTable.upgrade(db);
+        FavouriteTable.upgrade(db);
     }
-
 
     public void save(ActualWeather city){
         ActualWeatherTable.insert(getWritableDatabase(), city);
     }
 
+    // salva preferito
+    public void saveFavourite(ActualWeather favourite){ FavouriteTable.insert(getWritableDatabase(), favourite);}
+
     public List<ActualWeather> getAllCities(){
         return ActualWeatherTable.select(getReadableDatabase());
+    }
+
+    // ritorna lista preferiti
+    public List<ActualWeather> getAllFavourites() {
+        return FavouriteTable.select(getReadableDatabase());
     }
 
     public void delete(){
         ActualWeatherTable.delete(getWritableDatabase());
     }
+
+    // cancella preferiti
+    public void deleteFavourite() { FavouriteTable.delete(getWritableDatabase()); }
 
 }
 

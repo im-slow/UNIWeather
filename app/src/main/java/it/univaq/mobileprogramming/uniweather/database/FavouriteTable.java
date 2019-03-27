@@ -9,9 +9,9 @@ import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 
-public class ActualWeatherTable {
+public class FavouriteTable {
     // Name of the table
-    static final String TABLE_NAME = "actualWeathers";
+    static final String TABLE_NAME = "favourites";
 
     // Columns name
     static final String ID = "id";
@@ -75,64 +75,64 @@ public class ActualWeatherTable {
      * The method save the City into the right table.
      *
      * @param db the database instance in writable mode
-     * @param city the saved object containing the right id
+     * @param favourite the saved object containing the right id
      */
-    static void insert(SQLiteDatabase db, ActualWeather city ){
+    static void insert(SQLiteDatabase db, ActualWeather favourite ){
 
         ContentValues values = new ContentValues();
-        values.put(WIND_DEGREE, city.getWind_degree());
-        values.put(HUMIDITY, city.getHumidity());
-        values.put(PRESSURE, city.getPressure());
-        values.put(NAME, city.getCity_name());
-        values.put(DESCRIPTION, city.getDescription());
-        values.put(ICON_NAME, city.getIcon_name());
-        values.put(COUNTRY, city.getCountry());
-        values.put(TEMP, city.getTemp());
-        values.put(MIN_TEMP, city.getMin_temp());
-        values.put(MAX_TEMP, city.getMax_temp());
-        values.put(WIND_SPEED, city.getWind_speed());
-        values.put(LATITUDE, city.getLatitude());
-        values.put(LONGITUDE, city.getLongitude());
+        values.put(WIND_DEGREE, favourite.getWind_degree());
+        values.put(HUMIDITY, favourite.getHumidity());
+        values.put(PRESSURE, favourite.getPressure());
+        values.put(NAME, favourite.getCity_name());
+        values.put(DESCRIPTION, favourite.getDescription());
+        values.put(ICON_NAME, favourite.getIcon_name());
+        values.put(COUNTRY, favourite.getCountry());
+        values.put(TEMP, favourite.getTemp());
+        values.put(MIN_TEMP, favourite.getMin_temp());
+        values.put(MAX_TEMP, favourite.getMax_temp());
+        values.put(WIND_SPEED, favourite.getWind_speed());
+        values.put(LATITUDE, favourite.getLatitude());
+        values.put(LONGITUDE, favourite.getLongitude());
         long id = db.insert(TABLE_NAME, null, values);
-        city.setCity_id((int) id);
+        favourite.setCity_id((int) id);
     }
 
     /**
      * The method update all values of the City.
      *
      * @param db the database instance in writable mode
-     * @param city the city to update with the new data
+     * @param favourite the favourite to update with the new data
      * @return true if the update is successful, false otherwise
      */
-    static boolean update(SQLiteDatabase db, ActualWeather city){
+    static boolean update(SQLiteDatabase db, ActualWeather favourite){
 
         ContentValues values = new ContentValues();
-        values.put(WIND_DEGREE, city.getWind_degree());
-        values.put(HUMIDITY, city.getHumidity());
-        values.put(PRESSURE, city.getPressure());
-        values.put(NAME, city.getCity_name());
-        values.put(DESCRIPTION, city.getDescription());
-        values.put(ICON_NAME, city.getIcon_name());
-        values.put(COUNTRY, city.getCountry());
-        values.put(TEMP, city.getTemp());
-        values.put(MIN_TEMP, city.getMin_temp());
-        values.put(MAX_TEMP, city.getMax_temp());
-        values.put(WIND_SPEED, city.getWind_speed());
-        values.put(LATITUDE, city.getLatitude());
-        values.put(LONGITUDE, city.getLongitude());
+        values.put(WIND_DEGREE, favourite.getWind_degree());
+        values.put(HUMIDITY, favourite.getHumidity());
+        values.put(PRESSURE, favourite.getPressure());
+        values.put(NAME, favourite.getCity_name());
+        values.put(DESCRIPTION, favourite.getDescription());
+        values.put(ICON_NAME, favourite.getIcon_name());
+        values.put(COUNTRY, favourite.getCountry());
+        values.put(TEMP, favourite.getTemp());
+        values.put(MIN_TEMP, favourite.getMin_temp());
+        values.put(MAX_TEMP, favourite.getMax_temp());
+        values.put(WIND_SPEED, favourite.getWind_speed());
+        values.put(LATITUDE, favourite.getLatitude());
+        values.put(LONGITUDE, favourite.getLongitude());
         return db.update(TABLE_NAME, values, ID + " = ?",
-                new String[]{ String.valueOf(city.getCity_id()) }) == 1;
+                new String[]{ String.valueOf(favourite.getCity_id()) }) == 1;
     }
 
     /**
      * The method delete the City from the database
      *
      * @param db the database instance in writable mode
-     * @param city the city to delete
+     * @param favourite the favourite to delete
      * @return true if the delete is successful, false otherwise
      */
-    static boolean delete(SQLiteDatabase db, ActualWeather city){
-        return db.delete(TABLE_NAME, ID + " = " + city.getCity_id(), null) == 1;
+    static boolean delete(SQLiteDatabase db, ActualWeather favourite){
+        return db.delete(TABLE_NAME, ID + " = " + favourite.getCity_id(), null) == 1;
 
     }
 
@@ -156,7 +156,7 @@ public class ActualWeatherTable {
      */
     static List<ActualWeather> select(SQLiteDatabase db){
 
-        List<ActualWeather> cities = new ArrayList<>();
+        List<ActualWeather> favourites = new ArrayList<>();
 
         String sql = "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COUNTRY + " ASC;";
 
@@ -167,24 +167,24 @@ public class ActualWeatherTable {
 
             // Iterate on cursor to read all tuples
             while(cursor.moveToNext()){
-                ActualWeather city = new ActualWeather();
+                ActualWeather favourite = new ActualWeather();
 
                 // Warning: get dynamically the column index
-                city.setCity_id(cursor.getInt(cursor.getColumnIndex(ID)));
-                city.setWind_degree(cursor.getInt(cursor.getColumnIndex(WIND_DEGREE)));
-                city.setHumidity(cursor.getInt(cursor.getColumnIndex(HUMIDITY)));
-                city.setPressure(cursor.getInt(cursor.getColumnIndex(PRESSURE)));
-                city.setCity_name(cursor.getString(cursor.getColumnIndex(NAME)));
-                city.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
-                city.setIcon_name(cursor.getString(cursor.getColumnIndex(ICON_NAME)));
-                city.setCountry(cursor.getString(cursor.getColumnIndex(COUNTRY)));
-                city.setTemp(cursor.getDouble(cursor.getColumnIndex(TEMP)));
-                city.setMin_temp(cursor.getDouble(cursor.getColumnIndex(MIN_TEMP)));
-                city.setMax_temp(cursor.getDouble(cursor.getColumnIndex(MAX_TEMP)));
-                city.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
-                city.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
+                favourite.setCity_id(cursor.getInt(cursor.getColumnIndex(ID)));
+                favourite.setWind_degree(cursor.getInt(cursor.getColumnIndex(WIND_DEGREE)));
+                favourite.setHumidity(cursor.getInt(cursor.getColumnIndex(HUMIDITY)));
+                favourite.setPressure(cursor.getInt(cursor.getColumnIndex(PRESSURE)));
+                favourite.setCity_name(cursor.getString(cursor.getColumnIndex(NAME)));
+                favourite.setDescription(cursor.getString(cursor.getColumnIndex(DESCRIPTION)));
+                favourite.setIcon_name(cursor.getString(cursor.getColumnIndex(ICON_NAME)));
+                favourite.setCountry(cursor.getString(cursor.getColumnIndex(COUNTRY)));
+                favourite.setTemp(cursor.getDouble(cursor.getColumnIndex(TEMP)));
+                favourite.setMin_temp(cursor.getDouble(cursor.getColumnIndex(MIN_TEMP)));
+                favourite.setMax_temp(cursor.getDouble(cursor.getColumnIndex(MAX_TEMP)));
+                favourite.setLatitude(cursor.getDouble(cursor.getColumnIndex(LATITUDE)));
+                favourite.setLongitude(cursor.getDouble(cursor.getColumnIndex(LONGITUDE)));
 
-                cities.add(city);
+                favourites.add(favourite);
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -194,6 +194,6 @@ public class ActualWeatherTable {
             if(cursor != null) cursor.close();
         }
 
-        return cities;
+        return favourites;
     }
 }

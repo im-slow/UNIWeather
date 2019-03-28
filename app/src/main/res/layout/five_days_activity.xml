@@ -22,7 +22,7 @@
             android:background="@android:color/transparent" />
 
         <TextView
-            android:id="@+id/city_name"
+            android:id="@+id/banner"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
@@ -33,7 +33,7 @@
     </RelativeLayout>
 
     <TextView
-        android:id="@+id/main_text"
+        android:id="@+id/city_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-smallcaps"
@@ -50,7 +50,7 @@
         android:layout_height="match_parent">
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/city_list"
+            android:id="@+id/forecast_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
 

@@ -1,7 +1,5 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
-package it.univaq.mobileprogramming.activity;
-
 import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;

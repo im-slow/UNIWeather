@@ -1,5 +1,6 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -170,8 +171,16 @@ public class DetailsActivity extends AppCompatActivity {
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
     }
 
-    public void setIcon_view(String icon_name) {
-        if (icon_name.equals("01d"))
+    public void map_click(View v){
+        startActivity(new Intent(DetailsActivity.this, MapsActivity.class));
+    }
+
+    public void five_days_click(View v){
+        startActivity(new Intent(DetailsActivity.this, FiveDaysActivity.class));
+    }
+
+    public void setIcon_view(String icon_name){
+        if(icon_name.equals("01d"))
             icon_view.setImageResource(R.drawable.i01d);
         else if (icon_name.equals("01n"))
             icon_view.setImageResource(R.drawable.i01n);

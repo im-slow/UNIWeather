@@ -22,8 +22,6 @@ public class FiveDaysActivity extends AppCompatActivity {
     private ActualWeather actualWeather;
     private FiveDaysAdapter adapter;
     private List<Forecast> forecastList = new ArrayList<>();
-    private TextView day, time, temp, desc;
-    private ImageView icon;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -37,6 +35,9 @@ public class FiveDaysActivity extends AppCompatActivity {
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
 
+        Forecast prova = new Forecast(1, 20, 30, "ciao", "01n", "2019-03-28 21:00:00");
+        forecastList.add(prova);
+        if (adapter != null) adapter.notifyDataSetChanged();
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
     }

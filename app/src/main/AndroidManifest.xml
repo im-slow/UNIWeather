@@ -25,7 +25,12 @@
 
         </activity>
         <activity android:name=".activity.DetailsActivity"/>
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="@string/google_maps_key" />
         <activity android:name=".activity.FavouriteCitiesActivity"/>
+        <activity android:name=".activity.FiveDaysActivity"/>
+        <activity android:name=".activity.MapsActivity"/>
     </application>
 
 </manifest>

@@ -213,7 +213,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                                 JSONObject wind = item.getJSONObject("wind");
                                 JSONObject sys = item.getJSONObject("sys");
 
-                                tempWeather = new ActualWeather(coord.getDouble("lon"), coord.getDouble("lat"),
+                                tempWeather = new ActualWeather(coord.getDouble("lat"), coord.getDouble("lon"),
                                         weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
                                         main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
                                         main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),

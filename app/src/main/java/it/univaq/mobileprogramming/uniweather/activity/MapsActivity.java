@@ -5,9 +5,10 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
-import android.location.Location;
-import android.location.LocationListener;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -17,25 +18,21 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.lang.reflect.Field;
+
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
-import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-
     private Marker marker;
-
     private final int notification_id = 1;
-
-    private MyListener listener = new MyListener();
-
-    private LocationGoogleService locationService;
 
     private ActualWeather actualWeather;
 
@@ -76,16 +73,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        String city = getIntent().getStringExtra("cityName");
-        String region = getIntent().getStringExtra("regionName");
-        double latitude = getIntent().getDoubleExtra("latitude", 0);
-        double longitude = getIntent().getDoubleExtra("longitude", 0);
+        String city = actualWeather.getCity_name();
+        double temp = actualWeather.getTemp();
+        String tempString = Double.toString(temp)+" °C";
+        double latitude = actualWeather.getLatitude();
+        double longitude = actualWeather.getLongitude();
+        String icon_name = "i"+actualWeather.getIcon_name();
 
-        if(city == null || region == null) return;
+        int id = getResId(icon_name, R.drawable.class); // prendo id dell'icona associata al meteo
+        Bitmap icon = getBitmap(id); // converto da vector a bitmap
+        Bitmap smallMarker = Bitmap.createScaledBitmap(icon, 100, 100, false); // resize del marker
+
+        if(city == null) return;
 
         LatLng position = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(position).title(String.format("%s %s", city, region)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(position));
+        mMap.addMarker(new MarkerOptions().position(position).title(String.format("%s", tempString)).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
+
     }
 
     /**
@@ -121,32 +125,40 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(notificationManager != null) notificationManager.notify(notification_id, notify);
     }
 
-    /**
-     * Location Listener
-     */
-    private class MyListener implements LocationListener{
 
-        @Override
-        public void onLocationChanged(Location location) {
-
-            if(marker == null) {
-                marker = mMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                        .title("My Location")
-                );
-            } else {
-                marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-            }
-            notifyLocation(location.getLatitude() + ", " + location.getLongitude());
-        }
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onProviderDisabled(String provider) {}
+    /*
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
     }
+    */
+
+    // metodo per prendere id di una risora presente in drawable
+    public static int getResId(String resName, Class<?> c) {
+
+        try {
+            Field idField = c.getDeclaredField(resName);
+            return idField.getInt(idField);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    // getBitmap from drawable id
+    private Bitmap getBitmap(int drawableRes) {
+        Drawable drawable = getResources().getDrawable(drawableRes);
+        Canvas canvas = new Canvas();
+        Bitmap bitmap = Bitmap.createBitmap(drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        canvas.setBitmap(bitmap);
+        drawable.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        drawable.draw(canvas);
+
+        return bitmap;
+    }
+
 }

@@ -172,15 +172,15 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void map_click(View v){
-        ActualWeather city = actualWeather;
-        Intent intent = new Intent(v.getContext(), MapsActivity.class);
-        intent.putExtra("ActualWeather", city);
+        Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+        intent.putExtra("ActualWeather", actualWeather);
         v.getContext().startActivity(intent);
-        //startActivity(new Intent(DetailsActivity.this, MapsActivity.class));
     }
 
     public void five_days_click(View v){
-        startActivity(new Intent(DetailsActivity.this, FiveDaysActivity.class));
+        Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+        intent.putExtra("ActualWeather", actualWeather);
+        v.getContext().startActivity(intent);
     }
 
     /*

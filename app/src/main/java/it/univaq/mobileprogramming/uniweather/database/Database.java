@@ -65,5 +65,8 @@ public class Database extends SQLiteOpenHelper {
     // cancella preferiti
     public void deleteFavourite() { FavouriteTable.delete(getWritableDatabase()); }
 
+    //cancella un preferito
+    public void deleteFavourite(ActualWeather favourite) { FavouriteTable.delete(getWritableDatabase(), favourite); }
+
 }
 

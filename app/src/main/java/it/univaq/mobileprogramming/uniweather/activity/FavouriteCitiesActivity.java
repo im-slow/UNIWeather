@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
@@ -19,7 +18,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     private AdapterRecycler adapter;
     private double actualLat;
     private double actualLon;
-    private List<ActualWeather> favourites = new ArrayList<>();
+    private ArrayList<ActualWeather> favourites = new ArrayList<>();
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,6 +37,14 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
 
         if (adapter != null) adapter.notifyDataSetChanged();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        favourites = new ArrayList<>();
+        loadDataFromDB();
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     /**

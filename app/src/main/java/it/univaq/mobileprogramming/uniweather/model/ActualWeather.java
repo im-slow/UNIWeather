@@ -3,6 +3,7 @@ package it.univaq.mobileprogramming.uniweather.model;
 import java.io.Serializable;
 
 public class ActualWeather implements Serializable {
+    private long id;
     private int city_id,wind_degree,humidity,pressure;
     private String city_name,description,icon_name, country;
     private double temp,min_temp,max_temp,wind_speed,latitude,longitude;
@@ -49,6 +50,14 @@ public class ActualWeather implements Serializable {
         this.longitude = longitude;
         this.icon_name = icon_name;
         this.country = country;
+    }
+
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public int getCity_id() {

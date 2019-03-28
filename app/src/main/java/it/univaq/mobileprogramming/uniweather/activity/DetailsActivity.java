@@ -172,7 +172,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void map_click(View v){
-        Intent intent = new Intent(v.getContext(), DetailsActivity.class);
+        Intent intent = new Intent(v.getContext(), MapsActivity.class);
         intent.putExtra("ActualWeather", actualWeather);
         v.getContext().startActivity(intent);
     }

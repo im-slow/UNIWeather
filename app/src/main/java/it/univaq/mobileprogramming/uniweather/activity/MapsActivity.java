@@ -1,23 +1,17 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
-import android.Manifest;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.content.ContextCompat;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -30,9 +24,8 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
-import it.univaq.mobileprogramming.uniweather.utility.Settings;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationGoogleService.LocationListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
@@ -62,38 +55,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
-
-        if(Settings.loadBoolean(getApplicationContext(), Settings.SWITCH_LOCATION, true)) {
-            startGPS();
-        } else {
-            locationService = new LocationGoogleService();
-            locationService.onCreate(this, this);
-            locationService.requestLocationUpdates(this);
-        }
     }
 
     @Override
     protected void onStop() {
         super.onStop();
 
-        if(Settings.loadBoolean(getApplicationContext(), Settings.SWITCH_LOCATION, true)) {
-            stopGPS();
-        } else {
-            locationService.stopLocationUpdates(this);
-        }
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-
-        if(requestCode == 1){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                startGPS();
-            } else {
-                finish();
-            }
-        }
     }
 
     /**
@@ -122,67 +89,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /**
-     *  This is the lister used only by GooglePlayService
-     * @param location
-     */
-    @Override
-    public void onLocationChanged(Location location) {
-
-        if(marker == null) {
-            marker = mMap.addMarker(new MarkerOptions()
-                    .position(new LatLng(location.getLatitude(), location.getLongitude()))
-                    .title("My Location")
-            );
-        } else {
-            marker.setPosition(new LatLng(location.getLatitude(), location.getLongitude()));
-        }
-        notifyLocation(location.getLatitude() + ", " + location.getLongitude());
-    }
-
-    /**
-     * Start Location Service by GPS and Network provider.
-     */
-    private void startGPS(){
-
-        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-
-        int check = ContextCompat
-                .checkSelfPermission(getApplicationContext(),
-                        Manifest.permission.ACCESS_FINE_LOCATION);
-        if(check == PackageManager.PERMISSION_GRANTED) {
-
-            notifyLocation("GPS ATTIVO");
-            if(manager != null) {
-                manager.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        0,
-                        0,
-                        listener);
-
-                manager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        0,
-                        0,
-                        listener);
-            }
-        }   else {
-            ActivityCompat.requestPermissions(MapsActivity.this,
-                    new String[]{ Manifest.permission.ACCESS_FINE_LOCATION }, 1);
-        }
-    }
-
-    /**
-     * Stop Location service.
-     */
-    private void stopGPS(){
-
-        LocationManager manager = (LocationManager) getSystemService(LOCATION_SERVICE);
-        if(manager != null) manager.removeUpdates(listener);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        if(notificationManager != null) notificationManager.cancel(notification_id);
-    }
-
-    /**
      * Publish a notify.
      *
      * @param message
@@ -201,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         NotificationCompat.Builder builder = new NotificationCompat.Builder(
                 getApplicationContext(), "myChannel");
         builder.setContentTitle(getString(R.string.app_name));
-        builder.setSmallIcon(R.drawable.ic_stat_name);
+        builder.setSmallIcon(R.drawable.ic_launcher_use);
         builder.setContentText(message);
         builder.setAutoCancel(true);
 

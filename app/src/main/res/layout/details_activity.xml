@@ -223,4 +223,27 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="bottom"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/map_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="map_click"
+            android:text="Vedi sulla mappa" />
+
+        <Button
+            android:id="@+id/five_days_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:onClick="five_days_click"
+            android:text="Meteo 5 giorni" />
+    </LinearLayout>
+
 </LinearLayout>

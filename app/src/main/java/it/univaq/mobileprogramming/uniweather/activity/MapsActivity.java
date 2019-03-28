@@ -12,10 +12,10 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Build;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
-import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 
@@ -27,9 +27,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import it.univaq.mobileprogramming.R;
-import it.univaq.mobileprogramming.utility.LocationGoogleService;
-import it.univaq.mobileprogramming.utility.Settings;
+import it.univaq.mobileprogramming.uniweather.R;
+import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
+import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
+import it.univaq.mobileprogramming.uniweather.utility.Settings;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, LocationGoogleService.LocationListener {
 
@@ -43,10 +44,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private LocationGoogleService locationService;
 
+    private ActualWeather actualWeather;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+
+        actualWeather = (ActualWeather) getIntent().getSerializableExtra("ActualWeather");
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()

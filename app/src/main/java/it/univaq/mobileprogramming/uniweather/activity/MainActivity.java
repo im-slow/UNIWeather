@@ -219,6 +219,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                                         main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
                                         sys.getString("country"), item.getInt("id"), item.getString("name"));
 
+                                System.out.println(tempWeather);
                                 saveDataInDB(tempWeather);
                                 cities.add(tempWeather);
                             }

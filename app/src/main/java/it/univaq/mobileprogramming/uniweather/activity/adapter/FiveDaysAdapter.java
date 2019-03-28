@@ -34,8 +34,8 @@ public class FiveDaysAdapter extends RecyclerView.Adapter<FiveDaysAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         Forecast forecast = data.get(i);
-        viewHolder.day.setText(forecast.getTimestamp().substring(1,10));
-        viewHolder.time.setText(forecast.getTimestamp().substring(12));
+        viewHolder.day.setText(forecast.getTimestamp().substring(0,10));
+        viewHolder.time.setText(forecast.getTimestamp().substring(11));
         viewHolder.temp.setText(Double.toString((Math.round(forecast.getTemp() * 10) / 10.0)) + "°C");
         viewHolder.desc.setText(forecast.getDesc());
         if(forecast.getIcon().equals("01d"))

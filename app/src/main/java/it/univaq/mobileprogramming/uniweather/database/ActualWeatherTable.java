@@ -15,6 +15,7 @@ public class ActualWeatherTable {
 
     // Columns name
     static final String ID = "id";
+    static final String CITY_ID ="city_id";
     static final String WIND_DEGREE = "wind_degree";
     static final String HUMIDITY = "humidity";
     static final String PRESSURE = "pressure";
@@ -36,6 +37,7 @@ public class ActualWeatherTable {
     static void create(SQLiteDatabase db){
         String sql = "CREATE TABLE " + TABLE_NAME + "(" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CITY_ID + " INTEGER, " +
                 WIND_DEGREE + " INTEGER, " +
                 HUMIDITY + " INTEGER, " +
                 PRESSURE + " INTEGER, " +
@@ -80,6 +82,7 @@ public class ActualWeatherTable {
     static void insert(SQLiteDatabase db, ActualWeather city ){
 
         ContentValues values = new ContentValues();
+        values.put(CITY_ID, city.getCity_id());
         values.put(WIND_DEGREE, city.getWind_degree());
         values.put(HUMIDITY, city.getHumidity());
         values.put(PRESSURE, city.getPressure());
@@ -94,7 +97,7 @@ public class ActualWeatherTable {
         values.put(LATITUDE, city.getLatitude());
         values.put(LONGITUDE, city.getLongitude());
         long id = db.insert(TABLE_NAME, null, values);
-        city.setCity_id((int) id);
+        city.setId(id);
     }
 
     /**
@@ -107,6 +110,7 @@ public class ActualWeatherTable {
     static boolean update(SQLiteDatabase db, ActualWeather city){
 
         ContentValues values = new ContentValues();
+        values.put(CITY_ID, city.getCity_id());
         values.put(WIND_DEGREE, city.getWind_degree());
         values.put(HUMIDITY, city.getHumidity());
         values.put(PRESSURE, city.getPressure());
@@ -121,7 +125,7 @@ public class ActualWeatherTable {
         values.put(LATITUDE, city.getLatitude());
         values.put(LONGITUDE, city.getLongitude());
         return db.update(TABLE_NAME, values, ID + " = ?",
-                new String[]{ String.valueOf(city.getCity_id()) }) == 1;
+                new String[]{ String.valueOf(city.getId()) }) == 1;
     }
 
     /**
@@ -132,7 +136,7 @@ public class ActualWeatherTable {
      * @return true if the delete is successful, false otherwise
      */
     static boolean delete(SQLiteDatabase db, ActualWeather city){
-        return db.delete(TABLE_NAME, ID + " = " + city.getCity_id(), null) == 1;
+        return db.delete(TABLE_NAME, ID + " = " + city.getId(), null) == 1;
 
     }
 
@@ -170,7 +174,8 @@ public class ActualWeatherTable {
                 ActualWeather city = new ActualWeather();
 
                 // Warning: get dynamically the column index
-                city.setCity_id(cursor.getInt(cursor.getColumnIndex(ID)));
+                city.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+                city.setCity_id(cursor.getInt(cursor.getColumnIndex(CITY_ID)));
                 city.setWind_degree(cursor.getInt(cursor.getColumnIndex(WIND_DEGREE)));
                 city.setHumidity(cursor.getInt(cursor.getColumnIndex(HUMIDITY)));
                 city.setPressure(cursor.getInt(cursor.getColumnIndex(PRESSURE)));

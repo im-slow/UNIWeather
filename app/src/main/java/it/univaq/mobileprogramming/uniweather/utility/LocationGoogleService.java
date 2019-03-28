@@ -71,7 +71,7 @@ public class LocationGoogleService {
             if(areGoogleServicesAvailable(context)) {
                 LocationRequest request = new LocationRequest();
                 request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
-                request.setInterval(5);
+                request.setInterval(0);
                 request.setFastestInterval(0);
 
                 providerClient.requestLocationUpdates(request, locationCallback, null);

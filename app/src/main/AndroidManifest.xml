@@ -31,6 +31,7 @@
         <activity android:name=".activity.FavouriteCitiesActivity"/>
         <activity android:name=".activity.FiveDaysActivity"/>
         <activity android:name=".activity.MapsActivity"/>
+        <activity android:name=".activity.SettingsActivity"/>
     </application>
 
 </manifest>

@@ -1,6 +1,5 @@
 package it.univaq.mobileprogramming.uniweather.activity.adapter;
 
-import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,9 +7,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+
 import it.univaq.mobileprogramming.uniweather.R;
-import it.univaq.mobileprogramming.uniweather.activity.DetailsActivity;
 import it.univaq.mobileprogramming.uniweather.model.Forecast;
 
 
@@ -34,10 +37,28 @@ public class FiveDaysAdapter extends RecyclerView.Adapter<FiveDaysAdapter.ViewHo
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
 
         Forecast forecast = data.get(i);
-        viewHolder.day.setText(forecast.getTimestamp().substring(0,10));
-        viewHolder.time.setText(forecast.getTimestamp().substring(11));
+
+        String timestamp = forecast.getTimestamp().substring(0,10);
+        Date date = new Date();
+
+        // Converti la stringa in data
+        SimpleDateFormat dateformat = new SimpleDateFormat("yyyy-MM-dd");
+        String strdate = forecast.getTimestamp().substring(0,10);
+        try {
+            Date newdate = dateformat.parse(strdate);
+            String text = newdate.toString();
+            text = text.substring(0,3);
+
+            viewHolder.day.setText(dayTextIta(text));
+
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        viewHolder.time.setText(forecast.getTimestamp().substring(11,16));
         viewHolder.temp.setText(Double.toString((Math.round(forecast.getTemp() * 10) / 10.0)) + "°C");
         viewHolder.desc.setText(forecast.getDesc());
+
         if(forecast.getIcon().equals("01d"))
             viewHolder.icon.setImageResource(R.drawable.i01d);
         else if(forecast.getIcon().equals("01n"))
@@ -76,11 +97,40 @@ public class FiveDaysAdapter extends RecyclerView.Adapter<FiveDaysAdapter.ViewHo
             viewHolder.icon.setImageResource(R.drawable.i50n);
     }
 
+    // converti in italiano i giorni della settimana ddd
+    public String dayTextIta(String day){
+        String dayIta = new String();
+        switch(day){
+            case "Sat":
+                dayIta = "Sabato";
+                break;
+            case "Sun":
+                dayIta = "Domenica";
+                break;
+            case "Mon":
+                dayIta = "Lunedì";
+                break;
+            case "Tue":
+                dayIta = "Martedì";
+                break;
+            case "Wed":
+                dayIta = "Mercoledì";
+                break;
+            case "Thu":
+                dayIta = "Giovedì";
+                break;
+            case "Fry":
+                dayIta = "Venerdì";
+                break;
+        }
+        return dayIta;
+    }
+
+
     @Override
     public int getItemCount() {
         return data.size();
     }
-
 
     // Use ViewHolder Pattern
     class ViewHolder extends RecyclerView.ViewHolder {

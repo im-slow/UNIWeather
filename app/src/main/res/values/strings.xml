@@ -3,6 +3,14 @@
     <string name="banner">UNIWeather</string>
     <string name="action_settings">Settings</string>
     <string name="action_refresh">Settings</string>
+    <string name="action_exit">Exit</string>
     <string name="action_new">Settings</string>
     <string name="logo_desc">App logo</string>
+
+    <string name="dialog_title">Attenzione</string>
+    <string name="preference_summary_on">Attenzione</string>
+    <string name="preference_summary_off">Addo Vai?</string>
+
+    <string name="dialog_message">Vuoi uscire dall\'applicazione?</string>
+
 </resources>

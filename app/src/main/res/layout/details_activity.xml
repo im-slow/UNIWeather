@@ -223,27 +223,45 @@
 
     </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:gravity="bottom"
+        android:layout_gravity="bottom"
         android:orientation="horizontal">
 
         <Button
             android:id="@+id/map_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="8dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/button_transparent"
             android:onClick="map_click"
-            android:text="Vedi sulla mappa" />
+            android:text="Vedi sulla mappa"
+            android:textColor="#37474f"
+            android:padding="8dp"
+            android:visibility="visible" />
 
         <Button
             android:id="@+id/five_days_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="8dp"
+            android:layout_marginBottom="2dp"
+            android:layout_weight="0.5"
+            android:background="@drawable/button_transparent"
             android:onClick="five_days_click"
-            android:text="Meteo 5 giorni" />
-    </LinearLayout>
+            android:text="Meteo 5 giorni"
+            android:textColor="#37474f"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingRight="22dp"
+            android:paddingLeft="22dp"
+            android:visibility="visible" />
+    </RelativeLayout>
 
 </LinearLayout>

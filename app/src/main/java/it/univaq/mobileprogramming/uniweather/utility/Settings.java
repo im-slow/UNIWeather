@@ -9,6 +9,7 @@ import android.preference.PreferenceManager;
  */
 public class Settings {
 
+    public static final String SWITCH_DIALOG = "switch_dialog"; //cambia testo dialogo
     public static final String LAST_ACCESS = "last_access_time"; // Used to save the last timestamp when the user open the app
     public static final String FIRST_TIME = "first_time"; // Used to remember if is the first time that the user open the app
 

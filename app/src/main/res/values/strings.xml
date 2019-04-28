@@ -8,8 +8,8 @@
     <string name="logo_desc">App logo</string>
 
     <string name="dialog_title">Attenzione</string>
-    <string name="preference_summary_on">Attenzione</string>
-    <string name="preference_summary_off">Addo Vai?</string>
+    <string name="preference_summary_on">ON</string>
+    <string name="preference_summary_off">OFF</string>
 
     <string name="dialog_message">Vuoi uscire dall\'applicazione?</string>
 

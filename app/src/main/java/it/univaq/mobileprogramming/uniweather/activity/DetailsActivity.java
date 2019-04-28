@@ -57,7 +57,7 @@ public class DetailsActivity extends AppCompatActivity {
         min_temp.setText(actualWeather.getMin_temp() + "°C");
         max_temp.setText(actualWeather.getMax_temp() + "°C");
         wind_speed.setText(actualWeather.getWind_speed() + " km/h");
-        wind_degree.setText(actualWeather.getWind_degree() + "°");
+        wind_degree.setText(degToCompass(actualWeather.getWind_degree()));
         pressure.setText(actualWeather.getPressure() + "");
         humidity.setText(actualWeather.getHumidity() + "%");
 
@@ -237,6 +237,12 @@ public class DetailsActivity extends AppCompatActivity {
             icon_view.setImageResource(R.drawable.i50d);
         else if (icon_name.equals("50n"))
             icon_view.setImageResource(R.drawable.i50n);
+    }
+
+    public String degToCompass(int num) {
+        int val = (int) Math.floor((num / 22.5) + 0.5);
+        String[] arr = {"Nord", "Nord-nord-est", "Nord-est", "Est-nord-est", "Est", "Est-sud-est", "Sud-est", "Sud-sud-est", "Sud", "Sud-sud-ovest", "Sud-ovest", "ovest-sud-ovest", "ovest", "ovest-nord-ovest", "Nord-ovest", "Nord-nord-ovest"};
+        return arr[(val % 16)];
     }
 
 }

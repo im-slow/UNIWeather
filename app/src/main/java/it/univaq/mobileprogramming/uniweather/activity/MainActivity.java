@@ -125,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             // If is not the first time you open the app, get all saved data from Database
 
             loadDataFromDB();
+
         }
         Settings.save(getApplicationContext(), Settings.FIRST_TIME, false);
 

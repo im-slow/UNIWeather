@@ -19,8 +19,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_wind" />
-                            <entry key="sourceFile" value="C:\Users\andy4\Desktop\wind.svg" />
+                            <entry key="outputName" value="ic_weathercock" />
+                            <entry key="sourceFile" value="C:\Users\andy4\Downloads\weathercock.svg" />
                           </map>
                         </option>
                       </PersistentState>

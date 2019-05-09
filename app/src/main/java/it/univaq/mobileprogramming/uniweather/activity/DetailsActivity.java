@@ -52,7 +52,7 @@ public class DetailsActivity extends AppCompatActivity {
 
         setIcon_view(actualWeather.getIcon_name());
         name_city.setText(actualWeather.getCity_name());
-        temperature.setText(Integer.toString(((int) actualWeather.getTemp())));
+        temperature.setText(Integer.toString(((int) actualWeather.getTemp())) + "°");
         desc.setText(actualWeather.getDescription());
         min_temp.setText(actualWeather.getMin_temp() + "°C");
         max_temp.setText(actualWeather.getMax_temp() + "°C");

@@ -40,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="8dp"
             android:textColor="@color/title"
-            android:textSize="18sp"
+            android:textSize="14sp"
             android:textStyle="bold"
             tools:text="desc" />
     </LinearLayout>

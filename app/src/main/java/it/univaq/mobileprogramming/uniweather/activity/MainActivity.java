@@ -1,6 +1,8 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.Manifest;
+import android.app.ActivityManager;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -40,6 +42,7 @@ import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
 import it.univaq.mobileprogramming.uniweather.database.Database;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
+import it.univaq.mobileprogramming.uniweather.utility.ForecastService;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 import it.univaq.mobileprogramming.uniweather.utility.Settings;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
@@ -57,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -88,6 +92,18 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         Settings.save(getApplicationContext(), Settings.LAST_ACCESS, System.currentTimeMillis());
 
         if (adapter != null) adapter.notifyDataSetChanged();
+    }
+
+    private boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                Log.i ("isMyServiceRunning?", true+"");
+                return true;
+            }
+        }
+        Log.i ("isMyServiceRunning?", false+"");
+        return false;
     }
 
     @Override
@@ -248,7 +264,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                                 tempWeather = new ActualWeather(coord.getDouble("lat"), coord.getDouble("lon"),
                                         weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
                                         main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
-                                        main.getDouble("temp_max"), wind.getDouble("speed"), wind.getInt("deg"),
+                                        main.getDouble("temp_max"), wind.getDouble("speed"), /*wind.getInt("deg")*/0,
                                         sys.getString("country"), item.getInt("id"), item.getString("name"));
 
                                 System.out.println(tempWeather);

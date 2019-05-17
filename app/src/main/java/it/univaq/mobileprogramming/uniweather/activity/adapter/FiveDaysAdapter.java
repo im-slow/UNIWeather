@@ -119,7 +119,7 @@ public class FiveDaysAdapter extends RecyclerView.Adapter<FiveDaysAdapter.ViewHo
             case "Thu":
                 dayIta = "Giovedì";
                 break;
-            case "Fry":
+            case "Fri":
                 dayIta = "Venerdì";
                 break;
         }

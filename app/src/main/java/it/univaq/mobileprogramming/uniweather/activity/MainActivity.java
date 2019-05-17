@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private List<ActualWeather> cities = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +73,11 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
         setTitle(null);
+
+        // Starts the JobIntentService
+
+        Intent serviceIntent = new Intent();
+        ForecastService.enqueueWork(this, ForecastService.class,0 , serviceIntent);
 
         adapter = new AdapterRecycler(cities);
         RecyclerView list = findViewById(R.id.city_list);
@@ -94,17 +100,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                Log.i ("isMyServiceRunning?", true+"");
-                return true;
-            }
-        }
-        Log.i ("isMyServiceRunning?", false+"");
-        return false;
-    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {

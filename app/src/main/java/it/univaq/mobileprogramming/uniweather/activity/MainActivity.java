@@ -1,16 +1,18 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.Manifest;
-import android.app.ActivityManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -57,10 +59,30 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private List<ActualWeather> cities = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private BroadcastReceiver myReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            if(intent == null) {
+                System.out.println("intent vuoto");
+                return;
+            }
+            else {
+                String flag = intent.getStringExtra(ForecastService.REQUEST);
+                System.out.println("Ho ricevuto comandi dal service");
+                get_weather_by_coord(actualLat, actualLon);
+            }
+        }
+    };
+
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        // Registering the receiver
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .registerReceiver(myReceiver, new IntentFilter(ForecastService.FILTER_REQUEST_DOWNLOAD));
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -235,6 +257,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
+        cities.clear();
 
         String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
@@ -293,6 +316,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
      * Load all forecast from database.
      */
     private void loadDataFromDB(){
+        cities.clear();
         cities.addAll(Database.getInstance(getApplicationContext()).getAllCities());
         if(adapter != null) adapter.notifyDataSetChanged();
     }

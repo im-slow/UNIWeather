@@ -21,6 +21,7 @@
             android:name=".utility.AlarmReceiver"
             android:enabled="true"
             android:exported="false" />
+        <uses-library android:name="org.apache.http.legacy" android:required="false"/>
         <service android:name=".utility.ForecastService"
             android:permission="android.permission.BIND_JOB_SERVICE"/>
         <activity android:name=".activity.MainActivity">

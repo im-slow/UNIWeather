@@ -206,7 +206,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
         clearDataFromDB();
 
-        get_weather_by_coord(actualLat, actualLon);
+        startLocalization();
 
         if (adapter != null) adapter.notifyDataSetChanged();
 
@@ -218,8 +218,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         System.out.println("Lon: "+location.getLongitude());
         actualLat = location.getLatitude();
         actualLon = location.getLongitude();
-        get_weather_by_coord(actualLat,actualLon);
         locationService.stopLocationUpdates(this);
+        get_weather_by_coord(actualLat,actualLon);
 
         if (adapter != null) adapter.notifyDataSetChanged();
 
@@ -294,6 +294,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
+        if (latitude == 0 && longitude == 0)
+            return;
         cities.clear();
 
         String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";

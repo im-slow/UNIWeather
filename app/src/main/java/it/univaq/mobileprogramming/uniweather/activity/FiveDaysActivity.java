@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -34,6 +35,7 @@ public class FiveDaysActivity extends AppCompatActivity {
     private ActualWeather actualWeather;
     private FiveDaysAdapter adapter;
     private List<Forecast> forecastList = new ArrayList<>();
+    private TextView city_name;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -42,7 +44,10 @@ public class FiveDaysActivity extends AppCompatActivity {
 
         actualWeather = (ActualWeather) getIntent().getSerializableExtra("ActualWeather");
 
+        city_name = findViewById(R.id.city_name5);
+        city_name.setText(actualWeather.getCity_name());
         adapter = new FiveDaysAdapter(forecastList);
+
         RecyclerView list = findViewById(R.id.forecast_list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
@@ -57,6 +62,7 @@ public class FiveDaysActivity extends AppCompatActivity {
 
         setTitle(null);
     }
+
 
     //crea il menù all'avvio dell'app
     @Override

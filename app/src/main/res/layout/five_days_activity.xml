@@ -38,7 +38,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/city_name"
+            android:id="@+id/city_name5"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:fontFamily="sans-serif-smallcaps"
@@ -48,18 +48,12 @@
             android:textSize="16sp"
             android:textStyle="bold"
             tools:text="Date" />
+
     </LinearLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/main_swipe"
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/forecast_list"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/forecast_list"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
-    </android.support.v4.widget.SwipeRefreshLayout>
+        android:layout_height="match_parent" />
 
 </LinearLayout>

@@ -31,9 +31,6 @@ import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private Marker marker;
-    private final int notification_id = 1;
-
     private ActualWeather actualWeather;
 
     @Override
@@ -75,6 +72,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         String city = actualWeather.getCity_name();
         double temp = actualWeather.getTemp();
+        String desc = actualWeather.getDescription();
         String tempString = Double.toString(temp)+" °C";
         double latitude = actualWeather.getLatitude();
         double longitude = actualWeather.getLongitude();
@@ -87,55 +85,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if(city == null) return;
 
         LatLng position = new LatLng(latitude, longitude);
-        mMap.addMarker(new MarkerOptions().position(position).title(String.format("%s", tempString)).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(position, 10));
+        mMap.addMarker(new MarkerOptions().position(position).title(String.format("%s"+", "+"%s"+", " +"%s", city, desc, tempString)).icon(BitmapDescriptorFactory.fromBitmap(smallMarker)));
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(position,13), 5000, null);
 
     }
-
-    /**
-     * Publish a notify.
-     *
-     * @param message
-     */
-    private void notifyLocation(String message) {
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("myChannel", "Il Mio Canale", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setLightColor(Color.argb(255, 255, 0, 0));
-            if(notificationManager != null) notificationManager.createNotificationChannel(channel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                getApplicationContext(), "myChannel");
-        builder.setContentTitle(getString(R.string.app_name));
-        builder.setSmallIcon(R.drawable.ic_launcher_use);
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(), 0, intent, 0);
-
-        builder.setContentIntent(pendingIntent);
-
-        Notification notify = builder.build();
-        if(notificationManager != null) notificationManager.notify(notification_id, notify);
-    }
-
-
-    /*
-    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
-        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
-        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }
-    */
 
     // metodo per prendere id di una risora presente in drawable
     public static int getResId(String resName, Class<?> c) {

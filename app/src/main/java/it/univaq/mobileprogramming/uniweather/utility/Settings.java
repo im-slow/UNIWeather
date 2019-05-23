@@ -9,9 +9,10 @@ import android.preference.PreferenceManager;
  */
 public class Settings {
 
-    public static final String SWITCH_DIALOG = "switch_dialog"; //cambia testo dialogo
     public static final String LAST_ACCESS = "last_access_time"; // Used to save the last timestamp when the user open the app
     public static final String FIRST_TIME = "first_time"; // Used to remember if is the first time that the user open the app
+    public static final String LAST_LATITUDE = "last_latitude"; // Used to remember last accessible latitude
+    public static final String LAST_LONGITUDE = "last_longitude"; // Used to remember last accessible longitude
 
     public static void save(Context context, String key, long value){
 
@@ -31,6 +32,15 @@ public class Settings {
         editor.apply();
     }
 
+    public static void save(Context context, String key, float value){
+
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putFloat(key, value);
+        editor.apply();
+    }
+
     public static long loadLong(Context context, String key, long fallback){
 
         SharedPreferences preferences = PreferenceManager
@@ -43,6 +53,20 @@ public class Settings {
         SharedPreferences preferences = PreferenceManager
                 .getDefaultSharedPreferences(context);
         return preferences.getBoolean(key, fallback);
+    }
+
+    public static float lastLatitude(Context context, String key, float fallback) {
+
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        return preferences.getFloat(key, fallback);
+    }
+
+    public static float lastLongitude(Context context, String key, float fallback) {
+
+        SharedPreferences preferences = PreferenceManager
+                .getDefaultSharedPreferences(context);
+        return preferences.getFloat(key, fallback);
     }
 }
 

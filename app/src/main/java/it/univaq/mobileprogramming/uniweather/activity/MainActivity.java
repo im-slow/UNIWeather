@@ -47,13 +47,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
 import it.univaq.mobileprogramming.uniweather.database.Database;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
-import it.univaq.mobileprogramming.uniweather.utility.AlarmReceiver;
-import it.univaq.mobileprogramming.uniweather.utility.ForecastService;
+import it.univaq.mobileprogramming.uniweather.utility.ForecastWorker;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 import it.univaq.mobileprogramming.uniweather.utility.Settings;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
@@ -67,84 +70,39 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private double actualLon;
     private List<ActualWeather> cities = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
-    private final int notification_id = 1;
-    private AlarmManager alarmMgr;
-    private PendingIntent alarmIntent;
-
-    private BroadcastReceiver myReceiver = new BroadcastReceiver() {
-
-        @Override
-        public void onReceive(Context context, Intent intent) {
-
-
-            startLocalization();
-            notifyLocation("Dati aggiornati");
-        }
-    };
-
-    private void notifyLocation(String message) {
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("myChannel", "Il Mio Canale", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setLightColor(Color.argb(255, 255, 0, 0));
-            if(notificationManager != null) notificationManager.createNotificationChannel(channel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                getApplicationContext(), "myChannel");
-        builder.setContentTitle(getString(R.string.app_name));
-        builder.setSmallIcon(R.drawable.ic_launcher_use);
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(), 0, intent, 0);
-
-        builder.setContentIntent(pendingIntent);
-
-        Notification notify = builder.build();
-        if(notificationManager != null) notificationManager.notify(notification_id, notify);
-    }
+    private static String TAG = "UniqueWorker";
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        // Registering the receiver
-        LocalBroadcastManager.getInstance(getApplicationContext())
-                .registerReceiver(myReceiver, new IntentFilter(ForecastService.FILTER_REQUEST_DOWNLOAD));
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        startLocalization();
-
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
-
-        queue = VolleyRequest.getInstance(this).getRequestQueue();
-
         setTitle(null);
-
-        alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
-        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
-        alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
-        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
-                1000*60*60, alarmIntent);
+        TextView text = findViewById(R.id.main_text);
 
         adapter = new AdapterRecycler(cities);
         RecyclerView list = findViewById(R.id.city_list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
 
+
+        queue = VolleyRequest.getInstance(this).getRequestQueue();
+        startLocalization();
+
+        PeriodicWorkRequest work =
+                new PeriodicWorkRequest.Builder(ForecastWorker.class,
+                        15, TimeUnit.MINUTES)
+                        .build();
+        WorkManager.getInstance().enqueueUniquePeriodicWork(TAG,
+                ExistingPeriodicWorkPolicy.KEEP, work);
+
         swipeRefreshLayout = findViewById(R.id.main_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
 
-        TextView text = findViewById(R.id.main_text);
         long time = Settings.loadLong(getApplicationContext(), Settings.LAST_ACCESS, -1);
         if(time != -1){
 
@@ -157,16 +115,13 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
         if(requestCode == 1){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
-                locationService = new LocationGoogleService();
-                locationService.onCreate(this, this);
-                locationService.requestLocationUpdates(this);
+                startLocalization();
             } else {
                 finish();
             }
@@ -187,12 +142,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             clearDataFromDB();
             startLocalization();
 
-
-
-
         } else {
             // If is not the first time you open the app, get all saved data from Database
-
             loadDataFromDB();
 
         }
@@ -218,11 +169,14 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         System.out.println("Lon: "+location.getLongitude());
         actualLat = location.getLatitude();
         actualLon = location.getLongitude();
+
+        Settings.save(getApplicationContext(), Settings.LAST_LATITUDE, (float)actualLat);
+        Settings.save(getApplicationContext(), Settings.LAST_LONGITUDE, (float)actualLon);
+
         locationService.stopLocationUpdates(this);
         get_weather_by_coord(actualLat,actualLon);
 
         if (adapter != null) adapter.notifyDataSetChanged();
-
 
     }
 
@@ -360,9 +314,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         if(adapter != null) adapter.notifyDataSetChanged();
     }
 
-    /**
-     * Clear data from database.
-     */
     private void clearDataFromDB(){
         cities.clear();
         if(adapter != null) adapter.notifyDataSetChanged();

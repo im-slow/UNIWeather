@@ -1,16 +1,24 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -44,6 +52,7 @@ import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
 import it.univaq.mobileprogramming.uniweather.database.Database;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
+import it.univaq.mobileprogramming.uniweather.utility.AlarmReceiver;
 import it.univaq.mobileprogramming.uniweather.utility.ForecastService;
 import it.univaq.mobileprogramming.uniweather.utility.LocationGoogleService;
 import it.univaq.mobileprogramming.uniweather.utility.Settings;
@@ -58,26 +67,48 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private double actualLon;
     private List<ActualWeather> cities = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
+    private final int notification_id = 1;
+    private AlarmManager alarmMgr;
+    private PendingIntent alarmIntent;
 
     private BroadcastReceiver myReceiver = new BroadcastReceiver() {
+
         @Override
         public void onReceive(Context context, Intent intent) {
 
-            if(intent == null) {
-                System.out.println("intent vuoto");
-                return;
-            }
-            else {
-                String flag = intent.getStringExtra(ForecastService.REQUEST);
-                if (flag == null)
-                    return;
-                else {
-                    System.out.println("Ho ricevuto comandi dal service");
-                    get_weather_by_coord(actualLat, actualLon);}
-            }
+
+            startLocalization();
+            notifyLocation("Dati aggiornati");
         }
     };
 
+    private void notifyLocation(String message) {
+
+        NotificationManager notificationManager =
+                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("myChannel", "Il Mio Canale", NotificationManager.IMPORTANCE_DEFAULT);
+            channel.setLightColor(Color.argb(255, 255, 0, 0));
+            if(notificationManager != null) notificationManager.createNotificationChannel(channel);
+        }
+
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(
+                getApplicationContext(), "myChannel");
+        builder.setContentTitle(getString(R.string.app_name));
+        builder.setSmallIcon(R.drawable.ic_launcher_use);
+        builder.setContentText(message);
+        builder.setAutoCancel(true);
+
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                getApplicationContext(), 0, intent, 0);
+
+        builder.setContentIntent(pendingIntent);
+
+        Notification notify = builder.build();
+        if(notificationManager != null) notificationManager.notify(notification_id, notify);
+    }
 
     //inizializza l'app
     @Override
@@ -99,10 +130,11 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
         setTitle(null);
 
-        // Starts the JobIntentService
-
-        Intent serviceIntent = new Intent();
-        ForecastService.enqueueWork(this, ForecastService.class,0 , serviceIntent);
+        alarmMgr = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getApplicationContext(), AlarmReceiver.class);
+        alarmIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, intent, 0);
+        alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(),
+                1000*60*60, alarmIntent);
 
         adapter = new AdapterRecycler(cities);
         RecyclerView list = findViewById(R.id.city_list);
@@ -153,8 +185,9 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         if(Settings.loadBoolean(getApplicationContext(), Settings.FIRST_TIME, true)){
 
             clearDataFromDB();
+            startLocalization();
 
-            get_weather_by_coord(actualLat,actualLon);
+
 
 
         } else {
@@ -185,6 +218,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         System.out.println("Lon: "+location.getLongitude());
         actualLat = location.getLatitude();
         actualLon = location.getLongitude();
+        get_weather_by_coord(actualLat,actualLon);
         locationService.stopLocationUpdates(this);
 
         if (adapter != null) adapter.notifyDataSetChanged();

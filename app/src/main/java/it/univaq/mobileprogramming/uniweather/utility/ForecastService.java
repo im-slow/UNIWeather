@@ -7,6 +7,7 @@ import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SearchRecentSuggestionsProvider;
 import android.content.pm.PackageManager;
@@ -20,6 +21,7 @@ import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.view.View;
 
 import java.util.Date;
 
@@ -30,10 +32,7 @@ import static java.lang.Thread.sleep;
 
 public class ForecastService extends JobIntentService {
 
-    private final int notification_id = 1;
-    int i = 0;
     public static final String TAG = "ExampleJobINtentService";
-    public static final String REQUEST = "request";
     public static final String FILTER_REQUEST_DOWNLOAD = "filter_request_download";
 
     @Override
@@ -48,49 +47,12 @@ public class ForecastService extends JobIntentService {
 
         try {
             Intent newIntent = new Intent(FILTER_REQUEST_DOWNLOAD);
-            newIntent.putExtra(REQUEST, 0);
-            LocalBroadcastManager.getInstance(getApplicationContext())
-                    .sendBroadcast(newIntent);
-            i++;
-            System.out.println("numero:" +i);
-            notifyLocation("Meteo Aggiornato");
+            LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(newIntent);
         } catch (Exception ex) {
             Thread.currentThread().interrupt();
         }
     }
 
-    /**
-     * Publish a notify.
-     *
-     * @param message
-     */
-    private void notifyLocation(String message) {
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("myChannel", "Il Mio Canale", NotificationManager.IMPORTANCE_DEFAULT);
-            channel.setLightColor(Color.argb(255, 255, 0, 0));
-            if(notificationManager != null) notificationManager.createNotificationChannel(channel);
-        }
-
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(
-                getApplicationContext(), "myChannel");
-        builder.setContentTitle(getString(R.string.app_name));
-        builder.setSmallIcon(R.drawable.ic_launcher_use);
-        builder.setContentText(message);
-        builder.setAutoCancel(true);
-
-        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                getApplicationContext(), 0, intent, 0);
-
-        builder.setContentIntent(pendingIntent);
-
-        Notification notify = builder.build();
-        if(notificationManager != null) notificationManager.notify(notification_id, notify);
-    }
 
     @Override
     public void onDestroy() {

@@ -69,8 +69,11 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             }
             else {
                 String flag = intent.getStringExtra(ForecastService.REQUEST);
-                System.out.println("Ho ricevuto comandi dal service");
-                get_weather_by_coord(actualLat, actualLon);
+                if (flag == null)
+                    return;
+                else {
+                    System.out.println("Ho ricevuto comandi dal service");
+                    get_weather_by_coord(actualLat, actualLon);}
             }
         }
     };

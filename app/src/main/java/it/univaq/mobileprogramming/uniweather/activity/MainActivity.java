@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
         PeriodicWorkRequest work =
                 new PeriodicWorkRequest.Builder(ForecastWorker.class,
-                        15, TimeUnit.MINUTES)
+                        60, TimeUnit.MINUTES)
                         .build();
         WorkManager.getInstance().enqueueUniquePeriodicWork(TAG,
                 ExistingPeriodicWorkPolicy.KEEP, work);

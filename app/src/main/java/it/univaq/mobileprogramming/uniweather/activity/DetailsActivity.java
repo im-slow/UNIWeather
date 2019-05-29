@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.database.Database;
@@ -26,8 +25,7 @@ public class DetailsActivity extends AppCompatActivity {
             wind_speed, wind_degree, pressure, humidity;
     private Button star;
     private ActualWeather actualWeather;
-    private List<ActualWeather> actualWeathers = new ArrayList<>(); // per vedere se presente nel DB, si può ottimizzare con una selectByCity or selectByCoord
-    private List<ActualWeather> favourites = new ArrayList<>();
+    private ArrayList<ActualWeather> favourites = new ArrayList<>();
 
     //inizializza l'app
     @Override
@@ -64,7 +62,7 @@ public class DetailsActivity extends AppCompatActivity {
         setTitle(null);
         loadDataFromDB();
 
-        starColor((ArrayList<ActualWeather>) favourites);
+        clickDB(favourites);
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
@@ -79,9 +77,9 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        favourites = new ArrayList<>();
+        favourites.clear();
         loadDataFromDB();
-        starColor((ArrayList<ActualWeather>) favourites);
+        clickDB(favourites);
     }
 
 
@@ -123,10 +121,11 @@ public class DetailsActivity extends AppCompatActivity {
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
     }
 
+    /*
     // cambia colore stella
-    public void starColor(ArrayList<ActualWeather> city) {
+    public void starColor() {
         if(!(favourites.isEmpty())) {
-            for (ActualWeather a : city) {
+            for (ActualWeather a : favourites) {
                 if (a.getCity_id() == actualWeather.getCity_id()){
                     star.setBackgroundResource(R.drawable.ic_star_gold_24dp);
                 } else {
@@ -135,17 +134,20 @@ public class DetailsActivity extends AppCompatActivity {
             }
         }
     }
+    */
 
     public boolean clickDB(ArrayList<ActualWeather> city) {
         boolean find = false;
         if(!(favourites.isEmpty())) {
             for (ActualWeather a : city) {
-                if (a.getCity_id() == actualWeather.getCity_id()) {
+                if (a.getLatitude() == actualWeather.getLatitude() && a.getLongitude() == actualWeather.getLongitude()) {
                     find = true;
+                    star.setBackgroundResource(R.drawable.ic_star_gold_24dp);
                     return find;
                 }
             }
         }
+        star.setBackgroundResource(R.drawable.ic_star_border_empty_24dp);
         return find;
     }
 
@@ -167,7 +169,6 @@ public class DetailsActivity extends AppCompatActivity {
      * Load all forecast from database.
      */
     private void loadDataFromDB() {
-        actualWeathers.addAll(Database.getInstance(getApplicationContext()).getAllCities());
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
     }
 

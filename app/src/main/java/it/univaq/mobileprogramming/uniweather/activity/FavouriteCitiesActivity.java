@@ -28,6 +28,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
 
     private AdapterRecycler adapter;
     private RequestQueue queue;
+    //private SwipeRefreshLayout swipeRefreshLayout;
     private double actualLat;
     private double actualLon;
     private ArrayList<ActualWeather> favourites = new ArrayList<>();
@@ -47,8 +48,11 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         list.setAdapter(adapter);
 
         queue = VolleyRequest.getInstance(this).getRequestQueue();
-        updateFavourites(favourites);
+
         loadDataFromDB();
+        updateFavourites(favourites);
+        //swipeRefreshLayout = findViewById(R.id.main_swipe);
+        //swipeRefreshLayout.setOnRefreshListener(this);
         if (adapter != null) adapter.notifyDataSetChanged();
 
     }
@@ -56,9 +60,8 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        favourites = new ArrayList<>();
-        updateFavourites(favourites);
         loadDataFromDB();
+        updateFavourites(favourites);
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
@@ -73,10 +76,10 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
 
     }
 
-    public ActualWeather get_weather_by_id(int id) {
+    public ActualWeather get_weather_by_coord(double latitude, double longitude) {
         //favourites.clear();
         ActualWeather tempWeather = new ActualWeather();
-        String url = "http://api.openweathermap.org/data/2.5/weather?id="+id+"&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
             @Override
@@ -125,21 +128,22 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
 
     private void clearDataFromDB(){
         favourites.clear();
-        if(adapter != null) adapter.notifyDataSetChanged();
         Database.getInstance(getApplicationContext()).delete();
-
+        if(adapter != null) adapter.notifyDataSetChanged();
     }
-    
+
     private void updateFavourites(ArrayList<ActualWeather> favourites){
-        ArrayList<ActualWeather> temp = new ArrayList<ActualWeather>();
+        //swipeRefreshLayout.setRefreshing(true);
+        ArrayList<ActualWeather> temp = favourites;
+        ActualWeather favTemp = new ActualWeather();
         clearDataFromDB();
-        int i = 0;
-        for (ActualWeather f: favourites) {
-            temp.add(get_weather_by_id(f.getCity_id()));
-            saveDataInDB(temp.get(i));
-            i++;
+        for (ActualWeather t: temp) {
+            favTemp = get_weather_by_coord(t.getLongitude(), t.getLatitude());
+            favourites.add(favTemp);
+            System.out.println("oggetto nuovo"+": "+favTemp.getCity_name()+","+favTemp.getTemp());
+            saveDataInDB(favTemp);
         }
         loadDataFromDB();
+        if(adapter != null) adapter.notifyDataSetChanged();
     }
-
 }

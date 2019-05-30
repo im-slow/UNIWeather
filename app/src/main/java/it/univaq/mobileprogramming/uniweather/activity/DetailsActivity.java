@@ -238,6 +238,8 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public String degToCompass(int num) {
+        String NaN = "NaN";
+        if(num == -1) return NaN;
         int val = (int) Math.floor((num / 22.5) + 0.5);
         String[] arr = {"Nord", "Nord-nord-est", "Nord-est", "Est-nord-est", "Est", "Est-sud-est", "Sud-est", "Sud-sud-est", "Sud", "Sud-sud-ovest", "Sud-ovest", "ovest-sud-ovest", "ovest", "ovest-nord-ovest", "Nord-ovest", "Nord-nord-ovest"};
         return arr[(val % 16)];

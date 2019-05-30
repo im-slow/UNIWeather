@@ -81,7 +81,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     }
 
     public ActualWeather get_weather_by_cityid(int city_id) {
-        Log.d(TAG, "get_weather_by_coord");
+        Log.d(TAG, "get_weather_by_cityid");
         //favourites.clear();
         ActualWeather tempWeather = new ActualWeather();
         String url = "http://api.openweathermap.org/data/2.5/weather?id="+city_id+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
@@ -102,10 +102,15 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
                         JSONObject wind = info.getJSONObject("wind");
                         JSONObject sys = info.getJSONObject("sys");
 
+                        int windDegree = -1;
+                        if(wind.length()>1){
+                            windDegree = wind.getInt("deg");
+                        }
+
                         tempWeather = new ActualWeather(coord.getDouble("lat"), coord.getDouble("lon"),
                                 weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
                                 main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
-                                main.getDouble("temp_max"), wind.getDouble("speed"), /*wind.getInt("deg")*/0,
+                                main.getDouble("temp_max"), wind.getDouble("speed"), windDegree,
                                 sys.getString("country"), info.getInt("id"), info.getString("name"));
 
                         System.out.println(tempWeather);

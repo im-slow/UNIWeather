@@ -1,26 +1,14 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
 import android.Manifest;
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.NotificationChannel;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.graphics.Color;
 import android.location.Location;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -32,6 +20,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.work.ExistingPeriodicWorkPolicy;
+import androidx.work.PeriodicWorkRequest;
+import androidx.work.WorkManager;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -49,9 +41,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
 
-import androidx.work.ExistingPeriodicWorkPolicy;
-import androidx.work.PeriodicWorkRequest;
-import androidx.work.WorkManager;
 import it.univaq.mobileprogramming.uniweather.R;
 import it.univaq.mobileprogramming.uniweather.activity.adapter.AdapterRecycler;
 import it.univaq.mobileprogramming.uniweather.database.Database;
@@ -295,10 +284,15 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                                 JSONObject wind = item.getJSONObject("wind");
                                 JSONObject sys = item.getJSONObject("sys");
 
+                                int windDegree = -1;
+                                if(wind.length()>1){
+                                    windDegree = item.getInt("deg");
+                                }
+
                                 tempWeather = new ActualWeather(coord.getDouble("lat"), coord.getDouble("lon"),
                                         weather.getString("description"), weather.getString("icon"), main.getDouble("temp"),
                                         main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
-                                        main.getDouble("temp_max"), wind.getDouble("speed"), /*wind.getInt("deg")*/0,
+                                        main.getDouble("temp_max"), wind.getDouble("speed"), windDegree,
                                         sys.getString("country"), item.getInt("id"), item.getString("name"));
 
                                 //System.out.println(tempWeather);

@@ -67,6 +67,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
 
+        Database.getInstance(getApplicationContext()).deleteFavourite();
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 

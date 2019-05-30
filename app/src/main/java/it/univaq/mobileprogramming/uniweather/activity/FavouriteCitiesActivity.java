@@ -28,9 +28,6 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
 
     private AdapterRecycler adapter;
     private RequestQueue queue;
-    //private SwipeRefreshLayout swipeRefreshLayout;
-    private double actualLat;
-    private double actualLon;
     private ArrayList<ActualWeather> favourites = new ArrayList<>();
     private static final String TAG = "FavouriteCitiesActivity";
 

@@ -7,10 +7,36 @@
     <string name="action_new">Settings</string>
     <string name="logo_desc">App logo</string>
 
-    <string name="dialog_title">Attenzione</string>
+    <string name="dialog_title">Warning</string>
     <string name="preference_summary_on">ON</string>
     <string name="preference_summary_off">OFF</string>
 
-    <string name="dialog_message">Vuoi uscire dall\'applicazione?</string>
+    <string name="dialog_message">Do you want to quit?</string>
+
+    <!-- Weather language-->
+    <string name="LANG">en</string>
+
+    <!-- FavouriteCitiesActivity-->
+    <string name="day1">Saturday</string>
+    <string name="day2">Sunday</string>
+    <string name="day3">Monday</string>
+    <string name="day4">Tuesday</string>
+    <string name="day5">Wednesday</string>
+    <string name="day6">Thursday</string>
+    <string name="day7">Friday</string>
+
+    <string name="celsius">°C</string>
+
+    <!-- details_activity.xml -->
+    <string name="windspeed">Wind Speed:</string>
+    <string name="pressure">Pressure:</string>
+    <string name="windangle">Wind Angle:</string>
+    <string name="humidity">Umidity:</string>
+    <string name="min">Min:</string>
+    <string name="max">Max:</string>
+    <string name="mapbutton">SHOW ON MAPS</string>
+    <string name="fivedays">5 DAYS WEATHER</string>
+
+    <string name="favourite">Favourites</string>
 
 </resources>

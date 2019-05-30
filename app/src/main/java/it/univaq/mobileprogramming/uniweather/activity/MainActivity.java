@@ -70,54 +70,70 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private double actualLon;
     private List<ActualWeather> cities = new ArrayList<>();
     private SwipeRefreshLayout swipeRefreshLayout;
-    private static String TAG = "UniqueWorker";
+    private static final String WORK = "UniqueWorker";
+    private static final String TAG = "MainActivity";
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(TAG, "onCreate");
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // toolbar personalizzata
         Toolbar mainToolbar = findViewById(R.id.toolbar);
         setSupportActionBar(mainToolbar);
         setTitle(null);
+
         TextView text = findViewById(R.id.main_text);
 
+        // adapter binding
         adapter = new AdapterRecycler(cities);
         RecyclerView list = findViewById(R.id.city_list);
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
 
-
-        queue = VolleyRequest.getInstance(this).getRequestQueue();
         startLocalization();
 
+        // prende l'istanza della coda di VolleyRequest
+        queue = VolleyRequest.getInstance(this).getRequestQueue();
+
+        // attiva la ricerca posizione
+        // startLocalization();
+
+        // inizializza il worker; se il worker è già attivo non lo richiama
         PeriodicWorkRequest work =
                 new PeriodicWorkRequest.Builder(ForecastWorker.class,
                         60, TimeUnit.MINUTES)
                         .build();
-        WorkManager.getInstance().enqueueUniquePeriodicWork(TAG,
+        WorkManager.getInstance().enqueueUniquePeriodicWork(WORK,
                 ExistingPeriodicWorkPolicy.KEEP, work);
 
+        // swipe down to refresh
         swipeRefreshLayout = findViewById(R.id.main_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
 
+        // calcola l'ultimo accesso (se non è la prima accensione)
         long time = Settings.loadLong(getApplicationContext(), Settings.LAST_ACCESS, -1);
         if(time != -1){
-
             SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss.SSS", Locale.getDefault());
             String date = format.format(new Date(time));
             text.setText(date);
         }
         Settings.save(getApplicationContext(), Settings.LAST_ACCESS, System.currentTimeMillis());
-
-        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
+    /*
+     * gestisce il risultato alla richiesta di permessi
+     * nel nostro caso attiva la localizzazione solo se l'utente
+     * ha concesso il permesso
+     *
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.d(TAG, "onRequestPermissionsResult");
 
         if(requestCode == 1){
             if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
@@ -131,12 +147,14 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop");
         locationService.stopLocationUpdates(this);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         if(Settings.loadBoolean(getApplicationContext(), Settings.FIRST_TIME, true)){
 
             clearDataFromDB();
@@ -148,23 +166,20 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
         }
         Settings.save(getApplicationContext(), Settings.FIRST_TIME, false);
-
-        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     @Override
     public void onRefresh() {
+        Log.d(TAG, "onRefresh");
 
         clearDataFromDB();
-
         startLocalization();
-
-        if (adapter != null) adapter.notifyDataSetChanged();
-
     }
 
     @Override
     public void onLocationChanged(Location location) {
+        Log.d(TAG, "onLocationChanged");
+
         System.out.println("Lat: "+location.getLatitude());
         System.out.println("Lon: "+location.getLongitude());
         actualLat = location.getLatitude();
@@ -183,6 +198,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     //crea il menù all'avvio dell'app
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -191,6 +207,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     //gestisce il menù
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -234,6 +251,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     private void startLocalization(){
+        Log.d(TAG, "startLocalization");
         int check = ContextCompat
                 .checkSelfPermission(getApplicationContext(),
                         Manifest.permission.ACCESS_FINE_LOCATION);
@@ -248,6 +266,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
+        Log.d(TAG, "get_weather_by_coord");
         if (latitude == 0 && longitude == 0)
             return;
         cities.clear();
@@ -278,7 +297,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
                                         main.getDouble("temp_max"), wind.getDouble("speed"), /*wind.getInt("deg")*/0,
                                         sys.getString("country"), item.getInt("id"), item.getString("name"));
 
-                                System.out.println(tempWeather);
+                                //System.out.println(tempWeather);
                                 saveDataInDB(tempWeather);
                                 cities.add(tempWeather);
                             }
@@ -302,6 +321,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
      * Save forecast in the database.
      */
     private void saveDataInDB(final ActualWeather city){
+        Log.d(TAG, "saveDataInDB");
         Database.getInstance(getApplicationContext()).save(city);
     }
 
@@ -309,12 +329,14 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
      * Load all forecast from database.
      */
     private void loadDataFromDB(){
+        Log.d(TAG, "loadDataFromDB");
         cities.clear();
         cities.addAll(Database.getInstance(getApplicationContext()).getAllCities());
         if(adapter != null) adapter.notifyDataSetChanged();
     }
 
     private void clearDataFromDB(){
+        Log.d(TAG, "clearDataFromDB");
         cities.clear();
         if(adapter != null) adapter.notifyDataSetChanged();
         Database.getInstance(getApplicationContext()).delete();
@@ -322,6 +344,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     }
 
     public void favourite_click(View v){
+        Log.d(TAG, "favourite_click");
         startActivity(new Intent(MainActivity.this, FavouriteCitiesActivity.class));
     }
 }

@@ -13,6 +13,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -32,10 +33,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private GoogleMap mMap;
     private ActualWeather actualWeather;
+    private static final String TAG = "MapsActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.activity_maps);
 
         actualWeather = (ActualWeather) getIntent().getSerializableExtra("ActualWeather");
@@ -49,11 +52,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
     }
 
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop");
 
     }
 
@@ -68,6 +73,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      */
     @Override
     public void onMapReady(GoogleMap googleMap) {
+        Log.d(TAG, "onMapReady");
         mMap = googleMap;
 
         String city = actualWeather.getCity_name();

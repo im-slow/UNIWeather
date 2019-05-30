@@ -38,30 +38,16 @@ public class LocationGoogleService {
         }
     };
 
-
     public void onCreate(Activity activity, LocationListener listener){
         providerClient = LocationServices.getFusedLocationProviderClient(activity);
         this.listener = listener;
     }
 
-    /**
-     * Check if the Google Play Services are available.
-     *
-     * @param context of your application
-     * @return true if they are available or false otherwise
-     */
     public boolean areGoogleServicesAvailable(Context context){
 
         return GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(context) == ConnectionResult.SUCCESS;
     }
 
-
-    /**
-     * Request locations updates.
-     *
-     * @param context the context of the application
-     * @return true if the permissions are granted and api is available or false otherwise
-     */
     public boolean requestLocationUpdates(Context context){
 
         int permissionFineLocation = ContextCompat.checkSelfPermission(context, Manifest.permission.ACCESS_FINE_LOCATION);
@@ -86,32 +72,6 @@ public class LocationGoogleService {
         if(areGoogleServicesAvailable(context)) {
             providerClient.removeLocationUpdates(locationCallback);
         }
-    }
-
-    /**
-     * Get last known location.
-     *
-     * @param activity the instance of the Activity
-     * @return true if the permissions are granted or false otherwise
-     */
-    public boolean requestLastLocation(Activity activity){
-
-        int permissionFineLocation = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_FINE_LOCATION);
-        int permissionCoarseLocation = ContextCompat.checkSelfPermission(activity, Manifest.permission.ACCESS_COARSE_LOCATION);
-        if(permissionCoarseLocation == PackageManager.PERMISSION_GRANTED || permissionFineLocation == PackageManager.PERMISSION_GRANTED) {
-
-            if(areGoogleServicesAvailable(activity)) {
-                providerClient.getLastLocation()
-                        .addOnSuccessListener(activity, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (listener != null) listener.onLocationChanged(location);
-                            }
-                        });
-            }
-            return true;
-        }
-        return false;
     }
 
     public interface LocationListener {

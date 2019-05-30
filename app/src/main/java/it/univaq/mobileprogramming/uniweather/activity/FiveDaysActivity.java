@@ -36,10 +36,12 @@ public class FiveDaysActivity extends AppCompatActivity {
     private FiveDaysAdapter adapter;
     private List<Forecast> forecastList = new ArrayList<>();
     private TextView city_name;
+    private static final String TAG = "FiveDaysActivity";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.five_days_activity);
 
         actualWeather = (ActualWeather) getIntent().getSerializableExtra("ActualWeather");
@@ -67,6 +69,7 @@ public class FiveDaysActivity extends AppCompatActivity {
     //crea il menù all'avvio dell'app
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -75,6 +78,7 @@ public class FiveDaysActivity extends AppCompatActivity {
     //gestisce il menù
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -89,6 +93,7 @@ public class FiveDaysActivity extends AppCompatActivity {
     }
 
     public void get_forecast_by_city_id(int city_id) {
+        Log.d(TAG, "get_forecast_by_city_id");
 
         String url = "http://api.openweathermap.org/data/2.5/forecast?id="+city_id+"&lang=it&units=metric&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {

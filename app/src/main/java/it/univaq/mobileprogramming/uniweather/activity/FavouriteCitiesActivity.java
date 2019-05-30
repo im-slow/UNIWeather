@@ -32,9 +32,11 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     private double actualLat;
     private double actualLon;
     private ArrayList<ActualWeather> favourites = new ArrayList<>();
+    private static final String TAG = "FavouriteCitiesActivity";
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.favourite_cities_activity);
 
         Toolbar mainToolbar = findViewById(R.id.toolbar);
@@ -50,7 +52,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
         loadDataFromDB();
-        updateFavourites(favourites);
+       // updateFavourites(favourites);
         //swipeRefreshLayout = findViewById(R.id.main_swipe);
         //swipeRefreshLayout.setOnRefreshListener(this);
         if (adapter != null) adapter.notifyDataSetChanged();
@@ -60,8 +62,9 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         loadDataFromDB();
-        updateFavourites(favourites);
+        //updateFavourites(favourites);
         if (adapter != null) adapter.notifyDataSetChanged();
     }
 
@@ -69,6 +72,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
      * Load all forecast from database.
      */
     private void loadDataFromDB(){
+        Log.d(TAG, "loadDataFromDB");
         //updateFavourites(favourites);
         favourites.clear();
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
@@ -77,6 +81,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     }
 
     public ActualWeather get_weather_by_coord(double latitude, double longitude) {
+        Log.d(TAG, "get_weather_by_coord");
         //favourites.clear();
         ActualWeather tempWeather = new ActualWeather();
         String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
@@ -123,16 +128,19 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     }
 
     private void saveDataInDB(final ActualWeather city){
+        Log.d(TAG, "saveDataInDB");
         Database.getInstance(getApplicationContext()).saveFavourite(city);
     }
 
     private void clearDataFromDB(){
+        Log.d(TAG, "clearDataFromDB");
         favourites.clear();
-        Database.getInstance(getApplicationContext()).delete();
+        Database.getInstance(getApplicationContext()).deleteFavourite();
         if(adapter != null) adapter.notifyDataSetChanged();
     }
 
-    private void updateFavourites(ArrayList<ActualWeather> favourites){
+   /* private void updateFavourites(ArrayList<ActualWeather> favourites){
+        Log.d(TAG, "updateFavourites");
         //swipeRefreshLayout.setRefreshing(true);
         ArrayList<ActualWeather> temp = favourites;
         ActualWeather favTemp = new ActualWeather();
@@ -145,5 +153,5 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         }
         loadDataFromDB();
         if(adapter != null) adapter.notifyDataSetChanged();
-    }
+    }*/
 }

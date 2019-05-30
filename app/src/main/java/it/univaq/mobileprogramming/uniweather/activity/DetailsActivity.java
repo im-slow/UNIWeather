@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,11 +27,13 @@ public class DetailsActivity extends AppCompatActivity {
     private Button star;
     private ActualWeather actualWeather;
     private ArrayList<ActualWeather> favourites = new ArrayList<>();
+    private static final String TAG = "DetailsActivity";
 
     //inizializza l'app
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate");
         setContentView(R.layout.details_activity);
 
         star = findViewById(R.id.favourite_cities);
@@ -72,11 +75,13 @@ public class DetailsActivity extends AppCompatActivity {
     @Override
     protected void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop");
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         favourites.clear();
         loadDataFromDB();
         clickDB(favourites);
@@ -86,6 +91,7 @@ public class DetailsActivity extends AppCompatActivity {
     //crea il menù all'avvio dell'app
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        Log.d(TAG, "onCreateOptionsMenu");
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
@@ -94,6 +100,7 @@ public class DetailsActivity extends AppCompatActivity {
     //gestisce il menù
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        Log.d(TAG, "onOptionsItemSelected");
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
@@ -108,6 +115,7 @@ public class DetailsActivity extends AppCompatActivity {
     }
 
     public void favourite_click(View v) {
+        Log.d(TAG, "favourite_click");
             if(!(clickDB((ArrayList<ActualWeather>) favourites))) {
                 System.out.println("salva preferito");
                 saveDataInDB(actualWeather);
@@ -137,6 +145,7 @@ public class DetailsActivity extends AppCompatActivity {
     */
 
     public boolean clickDB(ArrayList<ActualWeather> city) {
+        Log.d(TAG, "clickDB");
         boolean find = false;
         if(!(favourites.isEmpty())) {
             for (ActualWeather a : city) {
@@ -154,14 +163,16 @@ public class DetailsActivity extends AppCompatActivity {
     /**
      * Save forecast in the database.
      */
-    private void saveDataInDB(final ActualWeather favorite) {
-        Database.getInstance(getApplicationContext()).saveFavourite(favorite);
+    private void saveDataInDB(final ActualWeather favourite) {
+        Log.d(TAG, "saveDataInDB");
+        Database.getInstance(getApplicationContext()).saveFavourite(favourite);
     }
 
     /**
      * delete one forecast in the database.
      */
     private void deleteDataInDB(ActualWeather favourite) {
+        Log.d(TAG, "deleteDataInDB");
         Database.getInstance(getApplicationContext()).deleteFavourite(favourite);
     }
 
@@ -169,37 +180,23 @@ public class DetailsActivity extends AppCompatActivity {
      * Load all forecast from database.
      */
     private void loadDataFromDB() {
+        Log.d(TAG, "loadDataFromDB");
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
     }
 
     public void map_click(View v){
+        Log.d(TAG, "map_click");
         Intent intent = new Intent(v.getContext(), MapsActivity.class);
         intent.putExtra("ActualWeather", actualWeather);
         v.getContext().startActivity(intent);
     }
 
     public void five_days_click(View v){
+        Log.d(TAG, "five_days_click");
         Intent intent = new Intent(v.getContext(), FiveDaysActivity.class);
         intent.putExtra("ActualWeather", actualWeather);
         v.getContext().startActivity(intent);
     }
-
-    /*
-    // Define the click event on item
-            view.setOnClickListener(new View.OnClickListener() {
-
-                @Override
-                public void onClick(View v) {
-
-                    // Open another Activity and pass to it the right city
-                    ActualWeather city = data.get(getAdapterPosition());
-                    Intent intent = new Intent(v.getContext(), DetailsActivity.class);
-                    intent.putExtra("ActualWeather", city);
-                    v.getContext().startActivity(intent);
-                }
-
-            });
-            */
 
     public void setIcon_view(String icon_name){
         if(icon_name.equals("01d"))

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">UNIWeather</string>
+    <string name="banner">UNIWeather</string>
+    <string name="action_settings">Impostazioni</string>
+    <string name="action_refresh">Impostazioni</string>
+    <string name="action_exit">Esci</string>
+    <string name="action_new">Impostazioni</string>
+    <string name="logo_desc">App logo</string>
+
+    <string name="dialog_title">Attenzione</string>
+    <string name="preference_summary_on">ON</string>
+    <string name="preference_summary_off">OFF</string>
+
+    <string name="dialog_message">Vuoi uscire dall\'applicazione?</string>
+
+    <!-- FavouriteCitiesActivity-->
+    <string name="day1">Sabato</string>
+    <string name="day2">Domenica</string>
+    <string name="day3">Lunedì</string>
+    <string name="day4">Martedì</string>
+    <string name="day5">Mercoledì</string>
+    <string name="day6">Giovedì</string>
+    <string name="day7">Venerdì</string>
+
+    <string name="celsius">°C</string>
+
+    <string name="LANG">it</string>
+
+    <!-- details_activity.xml -->
+    <string name="windspeed">Velocità vento:</string>
+    <string name="pressure">Pressione:</string>
+    <string name="windangle">Direzione vento:</string>
+    <string name="humidity">Umidità:</string>
+    <string name="min">Min:</string>
+    <string name="max">Max:</string>
+    <string name="mapbutton">MOSTRA MAPPA</string>
+    <string name="fivedays">METEO 5 GIORNI</string>
+
+    <!-- favourite_cities_activity.xml -->
+    <string name="favourite">Preferiti</string>
+
+</resources>

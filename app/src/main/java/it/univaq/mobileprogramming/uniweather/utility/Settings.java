@@ -13,6 +13,7 @@ public class Settings {
     public static final String FIRST_TIME = "first_time"; // Used to remember if is the first time that the user open the app
     public static final String LAST_LATITUDE = "last_latitude"; // Used to remember last accessible latitude
     public static final String LAST_LONGITUDE = "last_longitude"; // Used to remember last accessible longitude
+    public static final String LANG = "LANG";
 
     public static void save(Context context, String key, long value){
 

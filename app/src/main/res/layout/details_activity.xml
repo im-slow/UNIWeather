@@ -113,7 +113,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Wind Speed: "
+                        android:text="@string/windspeed"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
@@ -155,7 +155,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Wind Angle: "
+                        android:text="@string/windangle"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
@@ -194,7 +194,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_weight="1"
-                        android:text="Pressure: "
+                        android:text="@string/pressure"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
@@ -233,7 +233,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="Umidità: "
+                        android:text="@string/humidity"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body2" />
 
                     <TextView
@@ -264,7 +264,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="Minima:" />
+                android:text="@string/min" />
 
             <TextView
                 android:id="@+id/min_temp"
@@ -278,7 +278,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="Massima:" />
+                android:text="@string/max" />
 
             <TextView
                 android:id="@+id/max_temp"
@@ -308,7 +308,7 @@
             android:layout_weight="0.5"
             android:background="@drawable/button_transparent"
             android:onClick="map_click"
-            android:text="Vedi sulla mappa"
+            android:text="@string/mapbutton"
             android:textColor="#37474f"
             android:visibility="visible"
             />
@@ -324,7 +324,7 @@
             android:layout_weight="0.5"
             android:background="@drawable/button_transparent"
             android:onClick="five_days_click"
-            android:text="Meteo 5 giorni"
+            android:text="@string/fivedays"
             android:textColor="#37474f"
             android:visibility="visible" />
     </LinearLayout>

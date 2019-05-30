@@ -288,7 +288,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
                                 int windDegree = -1;
                                 if(wind.length()>1){
-                                    windDegree = item.getInt("deg");
+                                    windDegree = wind.getInt("deg");
                                 }
 
                                 tempWeather = new ActualWeather(coord.getDouble("lat"), coord.getDouble("lon"),

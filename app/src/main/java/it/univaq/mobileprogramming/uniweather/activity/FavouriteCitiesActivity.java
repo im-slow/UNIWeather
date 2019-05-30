@@ -80,11 +80,11 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
 
     }
 
-    public ActualWeather get_weather_by_coord(double latitude, double longitude) {
+    public ActualWeather get_weather_by_cityid(int city_id) {
         Log.d(TAG, "get_weather_by_coord");
         //favourites.clear();
         ActualWeather tempWeather = new ActualWeather();
-        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/weather?id="+city_id+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
             @Override
@@ -139,19 +139,19 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         if(adapter != null) adapter.notifyDataSetChanged();
     }
 
-   /* private void updateFavourites(ArrayList<ActualWeather> favourites){
+   private void updateFavourites(ArrayList<ActualWeather> favourites){
         Log.d(TAG, "updateFavourites");
         //swipeRefreshLayout.setRefreshing(true);
         ArrayList<ActualWeather> temp = favourites;
         ActualWeather favTemp = new ActualWeather();
         clearDataFromDB();
         for (ActualWeather t: temp) {
-            favTemp = get_weather_by_coord(t.getLongitude(), t.getLatitude());
+            favTemp = get_weather_by_cityid(t.getCity_id());
             favourites.add(favTemp);
             System.out.println("oggetto nuovo"+": "+favTemp.getCity_name()+","+favTemp.getTemp());
             saveDataInDB(favTemp);
         }
         loadDataFromDB();
         if(adapter != null) adapter.notifyDataSetChanged();
-    }*/
+    }
 }

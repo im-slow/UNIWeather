@@ -15,7 +15,7 @@ import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 public class Database extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "database.db";
-    private static final int VERSION = 2;
+    private static final int VERSION = 4;
 
     //... Singleton Pattern
     private static Database instance = null;

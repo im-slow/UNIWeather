@@ -15,6 +15,7 @@ public class FavouriteTable {
 
     // Columns name
     static final String ID = "id";
+    static final String CITY_ID ="city_id";
     static final String WIND_DEGREE = "wind_degree";
     static final String HUMIDITY = "humidity";
     static final String PRESSURE = "pressure";
@@ -36,6 +37,7 @@ public class FavouriteTable {
     static void create(SQLiteDatabase db){
         String sql = "CREATE TABLE " + TABLE_NAME + "(" +
                 ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                CITY_ID + " INTEGER, " +
                 WIND_DEGREE + " INTEGER, " +
                 HUMIDITY + " INTEGER, " +
                 PRESSURE + " INTEGER, " +
@@ -80,6 +82,7 @@ public class FavouriteTable {
     static void insert(SQLiteDatabase db, ActualWeather favourite ){
 
         ContentValues values = new ContentValues();
+        values.put(CITY_ID, favourite.getCity_id());
         values.put(WIND_DEGREE, favourite.getWind_degree());
         values.put(HUMIDITY, favourite.getHumidity());
         values.put(PRESSURE, favourite.getPressure());
@@ -94,7 +97,7 @@ public class FavouriteTable {
         values.put(LATITUDE, favourite.getLatitude());
         values.put(LONGITUDE, favourite.getLongitude());
         long id = db.insert(TABLE_NAME, null, values);
-        favourite.setCity_id((int) id);
+        favourite.setId((int) id);
     }
 
     /**
@@ -107,6 +110,7 @@ public class FavouriteTable {
     static boolean update(SQLiteDatabase db, ActualWeather favourite){
 
         ContentValues values = new ContentValues();
+        values.put(CITY_ID, favourite.getCity_id());
         values.put(WIND_DEGREE, favourite.getWind_degree());
         values.put(HUMIDITY, favourite.getHumidity());
         values.put(PRESSURE, favourite.getPressure());
@@ -121,7 +125,7 @@ public class FavouriteTable {
         values.put(LATITUDE, favourite.getLatitude());
         values.put(LONGITUDE, favourite.getLongitude());
         return db.update(TABLE_NAME, values, ID + " = ?",
-                new String[]{ String.valueOf(favourite.getCity_id()) }) == 1;
+                new String[]{ String.valueOf(favourite.getId()) }) == 1;
     }
 
     /**
@@ -132,7 +136,7 @@ public class FavouriteTable {
      * @return true if the delete is successful, false otherwise
      */
     static boolean delete(SQLiteDatabase db, ActualWeather favourite){
-        return db.delete(TABLE_NAME, ID + " = " + favourite.getCity_id(), null) == 1;
+        return db.delete(TABLE_NAME, ID + " = " + favourite.getId(), null) == 1;
 
     }
 
@@ -170,7 +174,8 @@ public class FavouriteTable {
                 ActualWeather favourite = new ActualWeather();
 
                 // Warning: get dynamically the column index
-                favourite.setCity_id(cursor.getInt(cursor.getColumnIndex(ID)));
+                favourite.setId(cursor.getInt(cursor.getColumnIndex(ID)));
+                favourite.setCity_id(cursor.getInt(cursor.getColumnIndex(CITY_ID)));
                 favourite.setWind_degree(cursor.getInt(cursor.getColumnIndex(WIND_DEGREE)));
                 favourite.setHumidity(cursor.getInt(cursor.getColumnIndex(HUMIDITY)));
                 favourite.setPressure(cursor.getInt(cursor.getColumnIndex(PRESSURE)));

@@ -94,13 +94,11 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
 
-        startLocalization();
-
         // prende l'istanza della coda di VolleyRequest
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
         // attiva la ricerca posizione
-        // startLocalization();
+        startLocalization();
 
         // inizializza il worker; se il worker è già attivo non lo richiama
         PeriodicWorkRequest work =
@@ -122,7 +120,10 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             text.setText(date);
         }
         Settings.save(getApplicationContext(), Settings.LAST_ACCESS, System.currentTimeMillis());
+
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
+
 
     /*
      * gestisce il risultato alla richiesta di permessi
@@ -166,6 +167,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
         }
         Settings.save(getApplicationContext(), Settings.FIRST_TIME, false);
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -174,6 +176,8 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
 
         clearDataFromDB();
         startLocalization();
+
+        if (adapter != null) adapter.notifyDataSetChanged();
     }
 
     @Override

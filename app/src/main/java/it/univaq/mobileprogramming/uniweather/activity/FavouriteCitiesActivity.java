@@ -52,9 +52,6 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
         loadDataFromDB();
-       // updateFavourites(favourites);
-        //swipeRefreshLayout = findViewById(R.id.main_swipe);
-        //swipeRefreshLayout.setOnRefreshListener(this);
         if (adapter != null) adapter.notifyDataSetChanged();
 
     }
@@ -76,12 +73,13 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         //updateFavourites(favourites);
         favourites.clear();
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
+        Log.d(TAG, "loadDataFromDB: "+favourites);
         if(adapter != null) adapter.notifyDataSetChanged();
 
     }
 
     public ActualWeather get_weather_by_cityid(int city_id) {
-        Log.d(TAG, "get_weather_by_coord");
+        Log.d(TAG, "get_weather_by_cityid");
         //favourites.clear();
         ActualWeather tempWeather = new ActualWeather();
         String url = "http://api.openweathermap.org/data/2.5/weather?id="+city_id+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
@@ -139,15 +137,17 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         if(adapter != null) adapter.notifyDataSetChanged();
     }
 
-   private void updateFavourites(ArrayList<ActualWeather> favourites){
+   private void updateFavourites(ArrayList<ActualWeather> paramfavourites){
         Log.d(TAG, "updateFavourites");
-        //swipeRefreshLayout.setRefreshing(true);
-        ArrayList<ActualWeather> temp = favourites;
-        ActualWeather favTemp = new ActualWeather();
+        ArrayList<ActualWeather> temp = new ArrayList<>(paramfavourites);
+        Log.d(TAG, "updateFavourites: "+temp);
+        ActualWeather favTemp;
         clearDataFromDB();
         for (ActualWeather t: temp) {
             favTemp = get_weather_by_cityid(t.getCity_id());
+            Log.d(TAG, "updateFavourites: "+favTemp);
             favourites.add(favTemp);
+            Log.d(TAG, "updateFavourites: "+favTemp);
             System.out.println("oggetto nuovo"+": "+favTemp.getCity_name()+","+favTemp.getTemp());
             saveDataInDB(favTemp);
         }

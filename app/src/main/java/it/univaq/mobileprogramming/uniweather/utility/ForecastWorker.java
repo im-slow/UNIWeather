@@ -57,6 +57,7 @@ public class ForecastWorker extends Worker {
         if (latitude == 0 && longitude == 0)
             return;
 
+        clearDataFromDB();
         String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=it&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
@@ -102,7 +103,6 @@ public class ForecastWorker extends Worker {
      * Save forecast in the database.
      */
     private void saveDataInDB(final ActualWeather city){
-        clearDataFromDB();
         Database.getInstance(getApplicationContext()).save(city);
     }
 

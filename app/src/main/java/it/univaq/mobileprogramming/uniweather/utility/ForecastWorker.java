@@ -117,7 +117,7 @@ public class ForecastWorker extends Worker {
                 (NotificationManager) getApplicationContext().getSystemService(NOTIFICATION_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("myChannel", "Il Mio Canale", NotificationManager.IMPORTANCE_DEFAULT);
+            NotificationChannel channel = new NotificationChannel("myChannel", "UniWeather", NotificationManager.IMPORTANCE_DEFAULT);
             channel.setLightColor(Color.argb(255, 255, 0, 0));
             if(notificationManager != null) notificationManager.createNotificationChannel(channel);
         }

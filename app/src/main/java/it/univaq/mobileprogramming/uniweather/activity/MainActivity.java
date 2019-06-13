@@ -88,9 +88,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         // prende l'istanza della coda di VolleyRequest
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
-        // attiva la ricerca posizione
-        //startLocalization();
-
         // inizializza il worker; se il worker è già attivo non lo richiama
         PeriodicWorkRequest work =
                 new PeriodicWorkRequest.Builder(ForecastWorker.class,

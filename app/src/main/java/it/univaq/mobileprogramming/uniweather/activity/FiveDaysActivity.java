@@ -1,7 +1,10 @@
 package it.univaq.mobileprogramming.uniweather.activity;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -76,6 +79,7 @@ public class FiveDaysActivity extends AppCompatActivity {
         return true;
     }
 
+
     //gestisce il menù
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -85,12 +89,42 @@ public class FiveDaysActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+        switch (item.getItemId()){
 
-        return super.onOptionsItemSelected(item);
+            case R.id.action_settings:
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+                return true;
+
+            case R.id.action_exit:
+                showExitDialog();
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+
+    private void showExitDialog(){
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(FiveDaysActivity.this);
+        builder.setTitle(R.string.dialog_title);
+        builder.setMessage(R.string.dialog_message);
+        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                finish();
+            }
+        });
+        builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     public void get_forecast_by_city_id(int city_id) {

@@ -38,5 +38,11 @@
     <string name="fivedays">5 DAYS WEATHER</string>
 
     <string name="favourite">Favourites</string>
+    <string name="value">Value</string>
+    <string name="last_access">Last Access</string>
+    <string name="city_name">City Name</string>
+    <string name="temp">Temperature</string>
+    <string name="day">Day</string>
+    <string name="time">Time</string>
 
 </resources>

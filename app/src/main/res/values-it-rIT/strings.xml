@@ -39,5 +39,11 @@
 
     <!-- favourite_cities_activity.xml -->
     <string name="favourite">Preferiti</string>
+    <string name="value">Valore</string>
+    <string name="last_access">Ultimo Accesso</string>
+    <string name="city_name">Nome città</string>
+    <string name="temp">Temperatura</string>
+    <string name="day">Giorno</string>
+    <string name="time">Orario</string>
 
 </resources>

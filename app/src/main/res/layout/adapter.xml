@@ -22,21 +22,23 @@
             android:id="@+id/city"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
             android:fontFamily="sans-serif-smallcaps"
+            android:text="@string/city_name"
             android:textColor="@color/title"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginTop="8dp"
             tools:text="City Name" />
 
         <TextView
             android:id="@+id/temp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:text="@string/temp"
             android:textColor="@color/title"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:layout_marginBottom="8dp"
             tools:text="Temp" />
     </LinearLayout>
 

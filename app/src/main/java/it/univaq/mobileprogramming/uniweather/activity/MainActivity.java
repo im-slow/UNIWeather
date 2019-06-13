@@ -69,8 +69,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     protected void onCreate(Bundle savedInstanceState) {
         Log.d(TAG, "onCreate");
 
-        Database.getInstance(getApplicationContext()).deleteFavourite();
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -142,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     protected void onStop() {
         super.onStop();
         Log.d(TAG, "onStop");
-        locationService.stopLocationUpdates(this);
+        //locationService.stopLocationUpdates(this);
     }
 
     @Override
@@ -268,7 +266,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             return;
         cities.clear();
 
-        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=+"+getString(LANG)+"+&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang="+getString(LANG)+"&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override

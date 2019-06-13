@@ -91,7 +91,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
         // attiva la ricerca posizione
-        startLocalization();
+        //startLocalization();
 
         // inizializza il worker; se il worker è già attivo non lo richiama
         PeriodicWorkRequest work =

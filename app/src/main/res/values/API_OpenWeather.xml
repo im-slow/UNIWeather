@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="API_Weather">7368b1dcdbc2b20401886a17908ac573</string>
+    <string name="API_Weather" translatable="false">7368b1dcdbc2b20401886a17908ac573</string>
 </resources>

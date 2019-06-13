@@ -30,7 +30,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
     private RequestQueue queue;
     private ArrayList<ActualWeather> favourites = new ArrayList<>();
     private static final String TAG = "FavouriteCitiesActivity";
-    private static final String LANG = "it";
+    private int LANG = R.string.LANG;
 
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,7 +80,7 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         Log.d(TAG, "get_weather_by_cityid");
         //favourites.clear();
         ActualWeather tempWeather = new ActualWeather();
-        String url = "http://api.openweathermap.org/data/2.5/weather?id="+city_id+"&units=metric&cnt=25&lang="+LANG+"&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/weather?id="+city_id+"&units=metric&cnt=25&lang="+getString(LANG)+"&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
             @Override

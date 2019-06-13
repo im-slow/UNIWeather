@@ -37,6 +37,7 @@ public class FiveDaysActivity extends AppCompatActivity {
     private List<Forecast> forecastList = new ArrayList<>();
     private TextView city_name;
     private static final String TAG = "FiveDaysActivity";
+    private int LANG = R.string.LANG;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class FiveDaysActivity extends AppCompatActivity {
     public void get_forecast_by_city_id(int city_id) {
         Log.d(TAG, "get_forecast_by_city_id");
 
-        String url = "http://api.openweathermap.org/data/2.5/forecast?id="+city_id+"&lang=it&units=metric&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/forecast?id="+city_id+"&lang="+getString(LANG)+"&units=metric&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
             @Override

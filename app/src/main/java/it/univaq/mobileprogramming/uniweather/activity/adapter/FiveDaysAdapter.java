@@ -98,29 +98,30 @@ public class FiveDaysAdapter extends RecyclerView.Adapter<FiveDaysAdapter.ViewHo
     }
 
     // converti in italiano i giorni della settimana ddd
-    public String dayTextIta(String day){
-        String dayIta = new String();
+    public int dayTextIta(String day){
+        //String dayIta = new String();
+        int dayIta = 0;
         switch(day){
             case "Sat":
-                dayIta = "Sabato";
+                dayIta = R.string.day1;
                 break;
             case "Sun":
-                dayIta = "Domenica";
+                dayIta = R.string.day2;
                 break;
             case "Mon":
-                dayIta = "Lunedì";
+                dayIta = R.string.day3;
                 break;
             case "Tue":
-                dayIta = "Martedì";
+                dayIta = R.string.day4;
                 break;
             case "Wed":
-                dayIta = "Mercoledì";
+                dayIta = R.string.day5;
                 break;
             case "Thu":
-                dayIta = "Giovedì";
+                dayIta = R.string.day6;
                 break;
             case "Fri":
-                dayIta = "Venerdì";
+                dayIta = R.string.day7;
                 break;
         }
         return dayIta;

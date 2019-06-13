@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
     private SwipeRefreshLayout swipeRefreshLayout;
     private static final String WORK = "UniqueWorker";
     private static final String TAG = "MainActivity";
-    private static final String LANG = "it";
+    private int LANG = R.string.LANG;
 
 
     //inizializza l'app
@@ -268,7 +268,7 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             return;
         cities.clear();
 
-        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=+"+LANG+"+&appid=7368b1dcdbc2b20401886a17908ac573";
+        String url = "http://api.openweathermap.org/data/2.5/find?lat="+latitude+"&lon="+longitude+"&units=metric&cnt=25&lang=+"+getString(LANG)+"+&appid=7368b1dcdbc2b20401886a17908ac573";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, url, new Response.Listener<String>() {
 
                     @Override

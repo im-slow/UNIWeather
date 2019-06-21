@@ -3,6 +3,7 @@ package it.univaq.mobileprogramming.uniweather.activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,12 +30,12 @@ import it.univaq.mobileprogramming.uniweather.database.Database;
 import it.univaq.mobileprogramming.uniweather.model.ActualWeather;
 import it.univaq.mobileprogramming.uniweather.utility.VolleyRequest;
 
-public class FavouriteCitiesActivity extends AppCompatActivity {
+public class FavouriteCitiesActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private AdapterRecycler adapter;
     private RequestQueue queue;
-    private ActualWeather tempWeather;
     private ArrayList<ActualWeather> favourites = new ArrayList<>();
+    private SwipeRefreshLayout swipeRefreshLayout;
     private static final String TAG = "FavouriteCitiesActivity";
     private int LANG = R.string.LANG;
 
@@ -53,9 +54,11 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         list.setLayoutManager(new LinearLayoutManager(this));
         list.setAdapter(adapter);
 
+        swipeRefreshLayout = findViewById(R.id.main_swipe);
+        swipeRefreshLayout.setOnRefreshListener(this);
+
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
-        loadDataFromDB();
         if (adapter != null) adapter.notifyDataSetChanged();
 
     }
@@ -65,8 +68,31 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         super.onResume();
         Log.d(TAG, "onResume");
         loadDataFromDB();
-        updateFavourites(favourites);
         if (adapter != null) adapter.notifyDataSetChanged();
+
+        updateData();
+    }
+
+    @Override
+    public void onRefresh() {
+        Log.d(TAG, "onRefresh");
+
+        updateData();
+
+        if (adapter != null) adapter.notifyDataSetChanged();
+    }
+
+    public void updateData(){
+        Log.d(TAG, "updateData");
+        Log.d(TAG, "updateData: "+favourites.size());
+        ArrayList<ActualWeather> tempFavourites = new ArrayList<>(favourites);
+        favourites.clear();
+        clearDataFromDB();
+        for (ActualWeather a: tempFavourites){
+            get_weather_by_cityid(a.getCity_id());
+        }
+
+
     }
 
     /**
@@ -74,7 +100,6 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
      */
     private void loadDataFromDB(){
         Log.d(TAG, "loadDataFromDB");
-        //updateFavourites(favourites);
         favourites.clear();
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
         Log.d(TAG, "loadDataFromDB: "+favourites);
@@ -90,9 +115,9 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    //swipeRefreshLayout.setRefreshing(true);
-                    //ActualWeather tempWeather;
                     Log.d("Dati", response);
+                    swipeRefreshLayout.setRefreshing(true);
+                    ActualWeather tempWeather;
                     JSONObject info = new JSONObject(response);
 
                     JSONObject coord = info.getJSONObject("coord");
@@ -111,12 +136,16 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
                             main.getInt("pressure"), main.getInt("humidity"), main.getDouble("temp_min"),
                             main.getDouble("temp_max"), wind.getDouble("speed"), windDegree,
                             sys.getString("country"), info.getInt("id"), info.getString("name"));
-
+                    favourites.add(tempWeather);
+                    saveDataInDB(tempWeather);
+                    swipeRefreshLayout.setRefreshing(false);
                     Log.d(TAG, "onResponse tempWeather: "+tempWeather);
                 } catch (Exception ex){
                     Log.d(TAG, "onResponse: error");
                     ex.printStackTrace();
                 }
+
+                if(adapter != null) adapter.notifyDataSetChanged();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -128,29 +157,9 @@ public class FavouriteCitiesActivity extends AppCompatActivity {
         return;
     }
 
-
-   private void updateFavourites(ArrayList<ActualWeather> paramfavourites){
-        Log.d(TAG, "updateFavourites");
-        ArrayList<ActualWeather> temp = new ArrayList<>(paramfavourites);
-        Log.d(TAG, "updateFavourites temp: "+temp);
-        ArrayList<ActualWeather> favTemp = new ArrayList<>();
-        //clearDataFromDB();
-        for (ActualWeather t: temp) {
-            Log.d(TAG, "updateFavourites: nel for");
-            get_weather_by_cityid(t.getCity_id());
-        }
-        Log.d(TAG, "updateFavourites: favTemp"+favTemp);
-        clearDataFromDB();
-        saveDataInDB(favTemp);
-        loadDataFromDB();
-        if(adapter != null) adapter.notifyDataSetChanged();
-    }
-
-    private void saveDataInDB(ArrayList<ActualWeather> favTemp){
+    private void saveDataInDB(ActualWeather favTemp){
         Log.d(TAG, "saveDataInDB");
-        for(ActualWeather t: favTemp) {
-            Database.getInstance(getApplicationContext()).saveFavourite(t);
-        }
+        Database.getInstance(getApplicationContext()).saveFavourite(favTemp);
     }
 
     private void clearDataFromDB(){

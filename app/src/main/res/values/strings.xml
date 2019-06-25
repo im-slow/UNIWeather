@@ -7,7 +7,7 @@
     <string name="action_new">Settings</string>
     <string name="logo_desc">App logo</string>
 
-    <string name="dialog_title">Warning</string>
+    <string name="dialog_title">Background weather updates</string>
     <string name="preference_summary_on">ON</string>
     <string name="preference_summary_off">OFF</string>
 

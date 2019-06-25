@@ -8,7 +8,7 @@
     <string name="action_new">Impostazioni</string>
     <string name="logo_desc">App logo</string>
 
-    <string name="dialog_title">Attenzione</string>
+    <string name="dialog_title">Aggiornamenti in background del meteo</string>
     <string name="preference_summary_on">ON</string>
     <string name="preference_summary_off">OFF</string>
 

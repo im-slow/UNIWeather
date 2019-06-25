@@ -88,14 +88,6 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
         // prende l'istanza della coda di VolleyRequest
         queue = VolleyRequest.getInstance(this).getRequestQueue();
 
-        // inizializza il worker; se il worker è già attivo non lo richiama
-        PeriodicWorkRequest work =
-                new PeriodicWorkRequest.Builder(ForecastWorker.class,
-                        60, TimeUnit.MINUTES)
-                        .build();
-        WorkManager.getInstance().enqueueUniquePeriodicWork(WORK,
-                ExistingPeriodicWorkPolicy.KEEP, work);
-
         // swipe down to refresh
         swipeRefreshLayout = findViewById(R.id.main_swipe);
         swipeRefreshLayout.setOnRefreshListener(this);
@@ -154,8 +146,24 @@ public class MainActivity extends AppCompatActivity implements LocationGoogleSer
             loadDataFromDB();
 
         }
+
         Settings.save(getApplicationContext(), Settings.FIRST_TIME, false);
         if (adapter != null) adapter.notifyDataSetChanged();
+
+        // inizializza il worker; se il worker è già attivo non lo richiama
+        boolean backgroundValue = Settings.loadBoolean(getApplicationContext(), Settings.BACKGROUND_WORK, false);
+        if (backgroundValue) {
+            Log.d(TAG, "onCreate: backgroundValue = true");
+            PeriodicWorkRequest work =
+                    new PeriodicWorkRequest.Builder(ForecastWorker.class,
+                            60, TimeUnit.MINUTES)
+                            .build();
+            WorkManager.getInstance().enqueueUniquePeriodicWork(WORK,
+                    ExistingPeriodicWorkPolicy.KEEP, work);
+        } else {
+            Log.d(TAG, "onCreate: backGroundValue = false");
+            WorkManager.getInstance().cancelAllWork();
+        }
     }
 
     @Override

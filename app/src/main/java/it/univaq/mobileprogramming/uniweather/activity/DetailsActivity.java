@@ -132,7 +132,7 @@ public class DetailsActivity extends AppCompatActivity {
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                finish();
+                DetailsActivity.this.finishAffinity();
             }
         });
         builder.setNegativeButton(android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -160,20 +160,6 @@ public class DetailsActivity extends AppCompatActivity {
         favourites.addAll(Database.getInstance(getApplicationContext()).getAllFavourites());
     }
 
-    /*
-    // cambia colore stella
-    public void starColor() {
-        if(!(favourites.isEmpty())) {
-            for (ActualWeather a : favourites) {
-                if (a.getCity_id() == actualWeather.getCity_id()){
-                    star.setBackgroundResource(R.drawable.ic_star_gold_24dp);
-                } else {
-                    star.setBackgroundResource(R.drawable.ic_star_border_empty_24dp);
-                }
-            }
-        }
-    }
-    */
 
     public boolean clickDB(ArrayList<ActualWeather> city) {
         Log.d(TAG, "clickDB");

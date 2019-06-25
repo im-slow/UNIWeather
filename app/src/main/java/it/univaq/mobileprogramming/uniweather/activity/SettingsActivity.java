@@ -5,7 +5,6 @@ import android.preference.PreferenceFragment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-
 import it.univaq.mobileprogramming.uniweather.R;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -26,6 +25,7 @@ public class SettingsActivity extends AppCompatActivity {
             super.onCreate(savedInstanceState);
 
             addPreferencesFromResource(R.xml.preference);
+
         }
     }
 }

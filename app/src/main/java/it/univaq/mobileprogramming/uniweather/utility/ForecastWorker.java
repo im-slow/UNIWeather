@@ -45,12 +45,15 @@ public class ForecastWorker extends Worker {
     @NonNull
     @Override
     public Result doWork() {
-        double lat = (double)Settings.lastLatitude(getApplicationContext(), Settings.LAST_LATITUDE, -1);
-        double lon = (double)Settings.lastLongitude(getApplicationContext(), Settings.LAST_LONGITUDE, -1);
-        get_weather_by_coord(lat,lon);
-        notifyLocation("Database Aggiornato");
-        Log.d(TAG, "doWork: Work Done");
-        return Result.success();
+        double lat = (double)Settings.loadFloat(getApplicationContext(), Settings.LAST_LATITUDE, -1);
+        double lon = (double)Settings.loadFloat(getApplicationContext(), Settings.LAST_LONGITUDE, -1);
+        if (!(lat == 0 && lon == 0)) {
+            get_weather_by_coord(lat, lon);
+            notifyLocation("Database Aggiornato");
+            Log.d(TAG, "doWork: Work Done");
+            return Result.success();
+        }
+        else return Result.failure();
     }
 
     public void get_weather_by_coord(double latitude, double longitude) {
